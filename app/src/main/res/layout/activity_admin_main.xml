@@ -4,10 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
-
+    tools:context=".AdminMainActivity">
     <FrameLayout
-        android:id="@+id/MainFragmentContainer"
+        android:id="@+id/AdminMainFragmentContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginBottom="60dp"
@@ -45,7 +44,7 @@
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:layout_weight="1"
-            android:src="@drawable/fi_shopping_cart"
+            android:src="@drawable/icons8_plus"
             android:tint="@color/Gray" />
 
         <ImageView
@@ -53,9 +52,7 @@
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:layout_weight="1"
-            android:src="@drawable/profil"
+            android:src="@drawable/icons8_check_all"
             android:tint="@color/Gray" />
     </LinearLayout>
-
-
 </androidx.constraintlayout.widget.ConstraintLayout>
