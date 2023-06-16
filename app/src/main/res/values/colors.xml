@@ -8,6 +8,7 @@
     <color name="black">#FF000000</color>
     <color name="Lowblack">#80000000</color>
     <color name="Gray">#979C9E</color>
+    <color name="LowGray">#DDDDDD</color>
     <color name="white">#FFFFFFFF</color>
     <color name="PrimaryColor">#EB162D</color>
     <color name="SecondColor">#40FF0000</color>
@@ -17,5 +18,6 @@
     <color name="ThirdTextColor">#4D3B3B3B</color>
     <color name="Green">#15BE77</color>
     <color name="Gold">#FF9F06</color>
+    <color name="LowGold">#F8F5F2</color>
     <color name="Transparent">#00FF0606</color>
 </resources>
