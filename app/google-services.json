@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "417566297972",
+    "project_id": "fratello-95cc9",
+    "storage_bucket": "fratello-95cc9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:417566297972:android:68e70f7006318e72f5a621",
+        "android_client_info": {
+          "package_name": "com.example.foodapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "417566297972-skmmsqmkuvdr2vuiarsbsptm4s6u6pj7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDsZ6TtMIopJ6P0aX3ZUae5UKMZ1kB4C0Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "417566297972-skmmsqmkuvdr2vuiarsbsptm4s6u6pj7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

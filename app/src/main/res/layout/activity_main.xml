@@ -38,7 +38,7 @@
             android:layout_height="25dp"
             android:layout_weight="1"
             android:src="@drawable/bars_solid"
-            android:tint="@color/Gray" />
+            app:tint="@color/Gray" />
 
         <ImageView
             android:id="@+id/CartIcon"
@@ -46,7 +46,7 @@
             android:layout_height="25dp"
             android:layout_weight="1"
             android:src="@drawable/fi_shopping_cart"
-            android:tint="@color/Gray" />
+            app:tint="@color/Gray" />
 
         <ImageView
             android:id="@+id/ProfilIcon"
@@ -54,7 +54,7 @@
             android:layout_height="25dp"
             android:layout_weight="1"
             android:src="@drawable/profil"
-            android:tint="@color/Gray" />
+            app:tint="@color/Gray" />
     </LinearLayout>
 
 
