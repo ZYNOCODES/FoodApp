@@ -1,14 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Fragments.AdminHomeFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                app:cardBackgroundColor="@color/ThirdColor"
+                app:cardCornerRadius="10dp"
+                android:layout_marginTop="40dp"
+                android:layout_marginStart="25dp"
+                android:layout_marginEnd="25dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    >
+
+                    <ImageView
+                        android:layout_width="25dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center|start"
+                        android:src="@drawable/icons8_search"
+                        android:layout_margin="10dp"
+                        app:tint="@color/Lowblack" />
+
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:background="@color/Transparent"
+                        android:fontFamily="@font/poppins_regular"
+                        android:gravity="center|start"
+                        android:hint="search"
+                        android:paddingStart="5dp"
+                        android:textColor="@color/Lowblack" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/AnnonceRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"/>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/CategoryRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"/>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/ProductRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Popular Meal Menu"
+                android:textColor="@color/PrimaryTextColor"
+                android:textSize="16sp"
+                android:fontFamily="@font/poppins_medium"
+                android:textAlignment="textStart"
+                android:gravity="center|start"
+                android:layout_marginTop="20dp"/>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/AllProductRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"/>
+        </LinearLayout>
+    </ScrollView>
 
 </FrameLayout>
