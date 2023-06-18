@@ -60,7 +60,7 @@
              app:layout_constraintTop_toBottomOf="@+id/textView5" />
 
          <com.google.android.material.card.MaterialCardView
-             android:id="@+id/line4"
+             android:id="@+id/GoogleSignInBTN"
              android:layout_width="match_parent"
              android:layout_height="50dp"
              app:cardCornerRadius="10dp"
@@ -99,7 +99,7 @@
          </com.google.android.material.card.MaterialCardView>
 
          <com.google.android.material.card.MaterialCardView
-             android:id="@+id/materialCardView2"
+             android:id="@+id/FacebookSignInBTN"
              android:layout_width="match_parent"
              android:layout_height="50dp"
              app:cardBackgroundColor="@color/Blue"
@@ -110,7 +110,7 @@
              android:layout_marginEnd="40dp"
              app:layout_constraintEnd_toEndOf="parent"
              app:layout_constraintStart_toStartOf="parent"
-             app:layout_constraintTop_toBottomOf="@+id/line4">
+             app:layout_constraintTop_toBottomOf="@+id/GoogleSignInBTN">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -160,7 +160,7 @@
              app:layout_constraintBottom_toBottomOf="parent"
              app:layout_constraintEnd_toEndOf="parent"
              app:layout_constraintStart_toStartOf="parent"
-             app:layout_constraintTop_toBottomOf="@+id/materialCardView2">
+             app:layout_constraintTop_toBottomOf="@+id/FacebookSignInBTN">
 
             <ImageView
                 android:layout_width="0dp"
