@@ -9,13 +9,11 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.foodapp.R;
-import com.google.android.material.card.MaterialCardView;
 
-public class PostType1ViewHolder extends RecyclerView.ViewHolder{
+public class PostType2ViewHolder extends RecyclerView.ViewHolder {
     public ImageView PostIMG;
     public TextView PostTitle,PostIngredients,PostPrice;
-    public CardView AddToCartBTN;
-    public PostType1ViewHolder(@NonNull View itemView) {
+    public PostType2ViewHolder(@NonNull View itemView) {
         super(itemView);
         InisializationOfFealds();
     }
@@ -24,6 +22,5 @@ public class PostType1ViewHolder extends RecyclerView.ViewHolder{
         PostTitle = itemView.findViewById(R.id.PostTitle);
         PostIngredients = itemView.findViewById(R.id.PostIngredients);
         PostPrice = itemView.findViewById(R.id.PostPrice);
-        AddToCartBTN = itemView.findViewById(R.id.AddToCartBTN);
     }
 }
