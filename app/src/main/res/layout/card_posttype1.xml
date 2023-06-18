@@ -15,14 +15,14 @@
         android:gravity="center"
         android:layout_margin="10dp">
         <ImageView
-            android:id="@+id/ICON"
+            android:id="@+id/PostIMG"
             android:layout_width="100dp"
             android:layout_height="85dp"
             android:src="@drawable/burger"
             android:scaleType="centerCrop"
             android:layout_gravity="center" />
         <TextView
-            android:id="@+id/Title"
+            android:id="@+id/PostTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Chicken burger"
@@ -34,6 +34,7 @@
             android:gravity="center|start"
             android:layout_marginTop="5dp"/>
         <TextView
+            android:id="@+id/PostIngredients"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="100 gr chicken + tomato + cheese  Lettuce"
@@ -67,6 +68,7 @@
                     android:gravity="center|start"
                     android:layout_marginEnd="5dp"/>
                 <TextView
+                    android:id="@+id/PostPrice"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="200"
@@ -88,6 +90,7 @@
                     android:gravity="center|start"/>
             </LinearLayout>
             <androidx.cardview.widget.CardView
+                android:id="@+id/AddToCartBTN"
                 android:layout_width="25dp"
                 android:layout_height="25dp"
                 app:cardCornerRadius="30dp"
