@@ -2,65 +2,140 @@ package com.example.foodapp.Fragments;
 
 import android.os.Bundle;
 
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
+import com.example.foodapp.Adapters.AdminOrderAdapter;
+import com.example.foodapp.Adapters.OrderAdapter;
+import com.example.foodapp.Models.OrderModel;
 import com.example.foodapp.R;
+import com.google.android.material.card.MaterialCardView;
+import com.google.firebase.auth.FirebaseAuth;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link AdminOrdersFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import java.util.ArrayList;
+
 public class AdminOrdersFragment extends Fragment {
-
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    public AdminOrdersFragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment AdminOrdersFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static AdminOrdersFragment newInstance(String param1, String param2) {
-        AdminOrdersFragment fragment = new AdminOrdersFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
-
+    private View view;
+    private MaterialCardView ConfirmedBTN, NewBTN;
+    private TextView ConfirmedTextView, NewTextView;
+    private RecyclerView MyAdminNewOrdersRecyclerView,MyAdminConfirmedOrdersRecyclerView;
+    private ArrayList<OrderModel> NewOrder,ConfirmedOrder;
+    private AdminOrderAdapter adminOrderAdapter;
+    private OrderAdapter orderAdapter;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_admin_orders, container, false);
+        view = inflater.inflate(R.layout.fragment_admin_orders, container, false);
+
+        //init
+        InisializationOfFealds();
+        ButtonRedirection();
+
+        //New orders recycler view
+        NewOrder = new ArrayList<>();
+        NewOrder.add(new OrderModel("34f51f5f4sddsf","a domicile","350",false));
+        NewOrder.add(new OrderModel("45231f5f4s54sf","a domicile","600",false));
+        NewOrder.add(new OrderModel("78971f5f4s7d6f","Livraison","850",false));
+        NewOrder.add(new OrderModel("24351f5f4sdds5","Livraison","750",false));
+        NewOrder.add(new OrderModel("57851f5f4sdds8","Livraison","1200",false));
+        NewOrder.add(new OrderModel("gdv51f5f4sdd47","Livraison","250",false));
+        NewOrder.add(new OrderModel("27d51f5f4sddcb","a domicile","250",false));
+        NewOrder.add(new OrderModel("99f51f5f4sddbb","a domicile","250",false));
+        NewOrder.add(new OrderModel("7yf51f5f4sddaw","a domicile","300",false));
+        NewOrder.add(new OrderModel("d8f51f5f4spert","Livraison","300",false));
+
+        adminOrderAdapter = new AdminOrderAdapter(getActivity(),NewOrder);
+        MyAdminNewOrdersRecyclerView.setAdapter(adminOrderAdapter);
+
+        LinearLayoutManager Newmanager = new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false);
+        MyAdminNewOrdersRecyclerView.setLayoutManager(Newmanager);
+
+        //Confirmed orders recycler view
+        ConfirmedOrder = new ArrayList<>();
+        ConfirmedOrder.add(new OrderModel("34f51f5f4sddsf","a domicile","350",true));
+        ConfirmedOrder.add(new OrderModel("45231f5f4s54sf","a domicile","600",true));
+        ConfirmedOrder.add(new OrderModel("78971f5f4s7d6f","Livraison","850",true));
+        ConfirmedOrder.add(new OrderModel("24351f5f4sdds5","Livraison","750",true));
+        ConfirmedOrder.add(new OrderModel("57851f5f4sdds8","Livraison","1200",true));
+        ConfirmedOrder.add(new OrderModel("gdv51f5f4sdd47","Livraison","250",true));
+        ConfirmedOrder.add(new OrderModel("27d51f5f4sddcb","a domicile","250",true));
+        ConfirmedOrder.add(new OrderModel("99f51f5f4sddbb","a domicile","250",true));
+        ConfirmedOrder.add(new OrderModel("7yf51f5f4sddaw","a domicile","300",true));
+        ConfirmedOrder.add(new OrderModel("d8f51f5f4spert","Livraison","300",true));
+
+        orderAdapter = new OrderAdapter(getActivity(),ConfirmedOrder);
+        MyAdminConfirmedOrdersRecyclerView.setAdapter(orderAdapter);
+
+        LinearLayoutManager Confirmedmanager = new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false);
+        MyAdminConfirmedOrdersRecyclerView.setLayoutManager(Confirmedmanager);
+        return view;
+    }
+    private void InisializationOfFealds(){
+        ConfirmedBTN = view.findViewById(R.id.ConfirmedBTN);
+        NewBTN = view.findViewById(R.id.NewBTN);
+        ConfirmedTextView = view.findViewById(R.id.ConfirmedTextView);
+        NewTextView = view.findViewById(R.id.NewTextView);
+        MyAdminNewOrdersRecyclerView = view.findViewById(R.id.MyAdminNewOrdersRecyclerView);
+        MyAdminConfirmedOrdersRecyclerView = view.findViewById(R.id.MyAdminConfirmedOrdersRecyclerView);
+        //init NewBTN
+        int SecondColor = ContextCompat.getColor(getActivity(), R.color.SecondColor);
+        int PrimaryColor = ContextCompat.getColor(getActivity(), R.color.PrimaryColor);
+        NewBTN.setCardBackgroundColor(SecondColor);
+        NewTextView.setTextColor(PrimaryColor);
+        //ConfirmedBTN
+        int WhiteColor = ContextCompat.getColor(getActivity(), R.color.white);
+        int PrimaryTextColor = ContextCompat.getColor(getActivity(), R.color.PrimaryTextColor);
+        ConfirmedBTN.setCardBackgroundColor(WhiteColor);
+        ConfirmedTextView.setTextColor(PrimaryTextColor);
+        //visibility
+        MyAdminConfirmedOrdersRecyclerView.setVisibility(View.GONE);
+        MyAdminNewOrdersRecyclerView.setVisibility(View.VISIBLE);
+    }
+    private void ButtonRedirection(){
+        ConfirmedBTN.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //ConfirmedBTN
+                int SecondColor = ContextCompat.getColor(getActivity(), R.color.SecondColor);
+                int PrimaryColor = ContextCompat.getColor(getActivity(), R.color.PrimaryColor);
+                ConfirmedBTN.setCardBackgroundColor(SecondColor);
+                ConfirmedTextView.setTextColor(PrimaryColor);
+                //NewBTN
+                int WhiteColor = ContextCompat.getColor(getActivity(), R.color.white);
+                int PrimaryTextColor = ContextCompat.getColor(getActivity(), R.color.PrimaryTextColor);
+                NewBTN.setCardBackgroundColor(WhiteColor);
+                NewTextView.setTextColor(PrimaryTextColor);
+                //visibility
+                MyAdminNewOrdersRecyclerView.setVisibility(View.GONE);
+                MyAdminConfirmedOrdersRecyclerView.setVisibility(View.VISIBLE);
+            }
+        });
+        NewBTN.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //NewBTN
+                int SecondColor = ContextCompat.getColor(getActivity(), R.color.SecondColor);
+                int PrimaryColor = ContextCompat.getColor(getActivity(), R.color.PrimaryColor);
+                NewBTN.setCardBackgroundColor(SecondColor);
+                NewTextView.setTextColor(PrimaryColor);
+                //ConfirmedBTN
+                int WhiteColor = ContextCompat.getColor(getActivity(), R.color.white);
+                int PrimaryTextColor = ContextCompat.getColor(getActivity(), R.color.PrimaryTextColor);
+                ConfirmedBTN.setCardBackgroundColor(WhiteColor);
+                ConfirmedTextView.setTextColor(PrimaryTextColor);
+                //visibility
+                MyAdminConfirmedOrdersRecyclerView.setVisibility(View.GONE);
+                MyAdminNewOrdersRecyclerView.setVisibility(View.VISIBLE);
+            }
+        });
     }
 }

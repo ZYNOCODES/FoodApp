@@ -3,64 +3,56 @@ package com.example.foodapp.Fragments;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.foodapp.Adapters.AdminOrderAdapter;
+import com.example.foodapp.Adapters.OrderAdapter;
+import com.example.foodapp.Models.OrderModel;
 import com.example.foodapp.R;
+import com.google.firebase.auth.FirebaseAuth;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link AdminAllOrdersFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import java.util.ArrayList;
+
 public class AdminAllOrdersFragment extends Fragment {
-
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    public AdminAllOrdersFragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment AdminAllOrdersFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static AdminAllOrdersFragment newInstance(String param1, String param2) {
-        AdminAllOrdersFragment fragment = new AdminAllOrdersFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
-
+    private View view;
+    private ArrayList<OrderModel> order;
+    private OrderAdapter orderAdapter;
+    private RecyclerView MyOrdersRecyclerView;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_all_orders, container, false);
+        view = inflater.inflate(R.layout.fragment_all_orders, container, false);
+
+        //init
+        InisializationOfFealds();
+
+        //all orders recycler view
+        order = new ArrayList<>();
+        order.add(new OrderModel("34f51f5f4sddsf","a domicile","350",true));
+        order.add(new OrderModel("45231f5f4s54sf","a domicile","600",true));
+        order.add(new OrderModel("78971f5f4s7d6f","Livraison","850",true));
+        order.add(new OrderModel("24351f5f4sdds5","Livraison","750",true));
+        order.add(new OrderModel("57851f5f4sdds8","Livraison","1200",true));
+        order.add(new OrderModel("gdv51f5f4sdd47","Livraison","250",true));
+        order.add(new OrderModel("27d51f5f4sddcb","a domicile","250",true));
+        order.add(new OrderModel("99f51f5f4sddbb","a domicile","250",true));
+        order.add(new OrderModel("7yf51f5f4sddaw","a domicile","300",true));
+        order.add(new OrderModel("d8f51f5f4spert","Livraison","300",true));
+
+        orderAdapter = new OrderAdapter(getActivity(),order);
+        MyOrdersRecyclerView.setAdapter(orderAdapter);
+
+        LinearLayoutManager manager = new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false);
+        MyOrdersRecyclerView.setLayoutManager(manager);
+
+        return view;
+    }
+    private void InisializationOfFealds(){
+        MyOrdersRecyclerView = view.findViewById(R.id.MyOrdersRecyclerView);
     }
 }

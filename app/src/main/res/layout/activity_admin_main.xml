@@ -24,7 +24,7 @@
         app:layout_constraintStart_toStartOf="parent">
 
         <ImageView
-            android:id="@+id/HomeIcon"
+            android:id="@+id/Ic_Home"
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:layout_weight="1"
@@ -32,27 +32,27 @@
             app:tint="@color/PrimaryColor" />
 
         <ImageView
-            android:id="@+id/MyOrdersIcon"
+            android:id="@+id/Ic_NewOrders"
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:layout_weight="1"
             android:src="@drawable/bars_solid"
-            android:tint="@color/Gray" />
+            app:tint="@color/Gray" />
 
         <ImageView
-            android:id="@+id/CartIcon"
+            android:id="@+id/Ic_NewProduct"
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:layout_weight="1"
             android:src="@drawable/icons8_plus"
-            android:tint="@color/Gray" />
+            app:tint="@color/Gray" />
 
         <ImageView
-            android:id="@+id/ProfilIcon"
+            android:id="@+id/Ic_AllOrders"
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:layout_weight="1"
             android:src="@drawable/icons8_check_all"
-            android:tint="@color/Gray" />
+            app:tint="@color/Gray" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

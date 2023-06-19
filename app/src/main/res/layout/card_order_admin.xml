@@ -22,6 +22,7 @@
             android:layout_gravity="center|start"
             android:gravity="start|center">
             <TextView
+                android:id="@+id/OrderType"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="a domicile"
@@ -44,6 +45,7 @@
                     android:textSize="18sp"
                     android:fontFamily="@font/poppins_medium"/>
                 <TextView
+                    android:id="@+id/OrderID"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="54561546531"
@@ -71,6 +73,7 @@
                     android:gravity="center|start"
                     android:layout_marginEnd="5dp"/>
                 <TextView
+                    android:id="@+id/OrderPrice"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="200"
@@ -118,6 +121,7 @@
                     android:layout_margin="5dp"/>
             </com.google.android.material.card.MaterialCardView>
             <com.google.android.material.card.MaterialCardView
+                android:id="@+id/OrderVoirBTN"
                 android:layout_width="80dp"
                 android:layout_height="30dp"
                 app:cardBackgroundColor="@color/green"

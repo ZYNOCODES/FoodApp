@@ -89,6 +89,7 @@ public class LogInFragment extends Fragment {
     private void isSaveInDB(){
         String my_email = EmailInPut.getText().toString();
         String pwd = PasswordInPut.getText().toString();
+
         Auth.signInWithEmailAndPassword(my_email,pwd).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
@@ -108,6 +109,5 @@ public class LogInFragment extends Fragment {
                 }
             }
         });
-
     }
 }
