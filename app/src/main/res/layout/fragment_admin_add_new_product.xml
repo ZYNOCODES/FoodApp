@@ -22,10 +22,12 @@
                 android:layout_gravity="center"
                 android:layout_marginTop="50dp">
                 <ImageView
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
+                    android:id="@+id/AddIMGInPut"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:src="@drawable/plus_solid"
                     app:tint="@color/white"
+                    android:scaleType="centerCrop"
                     android:layout_gravity="center"/>
             </androidx.cardview.widget.CardView>
 
@@ -55,6 +57,7 @@
                     android:layout_marginTop="2dp"
                     android:layout_marginBottom="10dp">
                     <EditText
+                        android:id="@+id/NameInPut"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
@@ -94,6 +97,7 @@
                     android:layout_marginTop="2dp"
                     android:layout_marginBottom="10dp">
                     <EditText
+                        android:id="@+id/PriceInPut"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
@@ -133,6 +137,7 @@
                     android:layout_marginTop="2dp"
                     android:layout_marginBottom="10dp">
                     <EditText
+                        android:id="@+id/IngredientsInPut"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
@@ -172,6 +177,7 @@
                     android:layout_marginTop="2dp"
                     android:layout_marginBottom="10dp">
                     <EditText
+                        android:id="@+id/CategoryInPut"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
@@ -183,7 +189,7 @@
                         android:paddingStart="20dp"
                         android:textColor="@color/PrimaryTextColor"
                         android:textSize="12sp"
-                        android:inputType="textPassword"/>
+                        android:inputType="text"/>
                 </com.google.android.material.card.MaterialCardView>
             </LinearLayout>
             <LinearLayout
@@ -211,6 +217,7 @@
                     android:layout_marginTop="2dp"
                     android:layout_marginBottom="10dp">
                     <EditText
+                        android:id="@+id/AboutInPut"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_gravity="center"
@@ -223,7 +230,7 @@
                         android:paddingTop="10dp"
                         android:textColor="@color/PrimaryTextColor"
                         android:textSize="12sp"
-                        android:inputType="textPassword"/>
+                        android:inputType="textLongMessage"/>
                 </com.google.android.material.card.MaterialCardView>
             </LinearLayout>
             <LinearLayout
@@ -240,6 +247,7 @@
                     android:fontFamily="@font/poppins_medium"
                     android:layout_marginStart="25dp"/>
                 <CheckBox
+                    android:id="@+id/AnnonceCheckBox"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:drawableTint="@color/PrimaryColor"
@@ -247,7 +255,7 @@
                     android:backgroundTint="@color/PrimaryColor"/>
             </LinearLayout>
             <com.google.android.material.card.MaterialCardView
-                android:id="@+id/materialCardView3"
+                android:id="@+id/AddNewProductBTN"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_marginTop="30dp"

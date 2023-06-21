@@ -23,7 +23,8 @@
                 android:id="@+id/PostIMG"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:src="@drawable/burger"
+                android:src="@drawable/pizza1"
+                android:scaleType="centerCrop"
                 android:layout_gravity="center" />
         </androidx.cardview.widget.CardView>
 

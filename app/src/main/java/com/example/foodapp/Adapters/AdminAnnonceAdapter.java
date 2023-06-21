@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.foodapp.Models.AnnonceModel;
+import com.example.foodapp.Models.Product;
 import com.example.foodapp.R;
 import com.example.foodapp.ViewHolders.AdminAnnonceViewHolder;
 import com.example.foodapp.ViewHolders.AnnonceViewHolder;
@@ -18,9 +19,9 @@ import java.util.ArrayList;
 
 public class AdminAnnonceAdapter extends RecyclerView.Adapter<AdminAnnonceViewHolder> {
     private Context context;
-    private ArrayList<AnnonceModel> annonces;
+    private ArrayList<Product> annonces;
 
-    public AdminAnnonceAdapter(Context context, ArrayList<AnnonceModel> annonces) {
+    public AdminAnnonceAdapter(Context context, ArrayList<Product> annonces) {
         this.context = context;
         this.annonces = annonces;
     }
@@ -35,7 +36,7 @@ public class AdminAnnonceAdapter extends RecyclerView.Adapter<AdminAnnonceViewHo
     @Override
     public void onBindViewHolder(@NonNull AdminAnnonceViewHolder holder, int position) {
         Picasso.get().load(annonces.get(position).getIMG()).into(holder.AnnonceIMG);
-        holder.AnnonceTitle.setText(annonces.get(position).getTitle());
+        holder.AnnonceTitle.setText(annonces.get(position).getName());
         holder.DeleteBTN.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

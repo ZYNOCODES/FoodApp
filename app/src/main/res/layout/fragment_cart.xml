@@ -30,13 +30,14 @@
         </LinearLayout>
         <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             android:paddingStart="10dp"
             android:paddingEnd="10dp"
             android:background="@color/LowGold">
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:orientation="vertical">
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/line1"
@@ -458,10 +459,7 @@
                     android:layout_marginTop="10dp"
                     app:cardBackgroundColor="@color/white"
                     app:cardCornerRadius="20dp"
-                    app:cardElevation="0dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent">
+                    app:cardElevation="0dp">
 
                     <com.google.android.material.card.MaterialCardView
                         android:layout_width="match_parent"
@@ -483,7 +481,7 @@
                             android:textSize="20sp" />
                     </com.google.android.material.card.MaterialCardView>
                 </com.google.android.material.card.MaterialCardView>
-            </androidx.constraintlayout.widget.ConstraintLayout>
+            </LinearLayout>
         </ScrollView>
 
     </LinearLayout>

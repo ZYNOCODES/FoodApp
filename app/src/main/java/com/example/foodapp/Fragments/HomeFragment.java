@@ -2,56 +2,52 @@ package com.example.foodapp.Fragments;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import com.example.foodapp.Adapters.AdminPostType1Adapter;
+import com.example.foodapp.Adapters.AdminPostType2Adapter;
 import com.example.foodapp.Adapters.AnnonceAdapter;
 import com.example.foodapp.Adapters.CategoryAdapter;
 import com.example.foodapp.Adapters.PostType1Adapter;
 import com.example.foodapp.Adapters.PostType2Adapter;
 import com.example.foodapp.Models.AnnonceModel;
 import com.example.foodapp.Models.CategoryModel;
-import com.example.foodapp.Models.PostType1Model;
+import com.example.foodapp.Models.Product;
 import com.example.foodapp.R;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
 public class HomeFragment extends Fragment {
     private View view;
     private RecyclerView AnnonceRecyclerView,CategoryRecyclerView, ProductRecyclerView, AllProductRecyclerView;
-    private ArrayList<PostType1Model> PostsType1, PostsType2;
-    private ArrayList<CategoryModel> category;
-    private ArrayList<AnnonceModel> annonce;
     private PostType1Adapter postType1Adapter;
     private PostType2Adapter postType2Adapter;
-    private CategoryAdapter categoryAdapter;
     private AnnonceAdapter annonceAdapter;
+    private DatabaseReference RefProduct;
+    private CategoryAdapter categoryAdapter;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_home, container, false);
         InisializationOfFealds();
 
-        //annonce recycler view
-        annonce = new ArrayList<>();
-
-        annonce.add(new AnnonceModel(R.drawable.burger4,"Special Offer\nfor March"));
-        annonce.add(new AnnonceModel(R.drawable.burger4,"Special Offer\nfor April"));
-        annonce.add(new AnnonceModel(R.drawable.burger4,"Special Offer\nfor June"));
-
-        annonceAdapter = new AnnonceAdapter(getActivity(), annonce);
-        AnnonceRecyclerView.setAdapter(annonceAdapter);
-
-        LinearLayoutManager Annoncemanager = new LinearLayoutManager(getContext(),LinearLayoutManager.HORIZONTAL,false);
-        AnnonceRecyclerView.setLayoutManager(Annoncemanager);
-
         //category recycler view
-        category = new ArrayList<>();
+        ArrayList<CategoryModel> category = new ArrayList<>();
 
         category.add(new CategoryModel("Burger",R.drawable.burgerimg));
         category.add(new CategoryModel("Pizza",R.drawable.pizzaimg));
@@ -59,36 +55,22 @@ public class HomeFragment extends Fragment {
 
         categoryAdapter = new CategoryAdapter(getActivity(), category);
         CategoryRecyclerView.setAdapter(categoryAdapter);
-
         LinearLayoutManager Categorymanager = new LinearLayoutManager(getContext(),LinearLayoutManager.HORIZONTAL,false);
         CategoryRecyclerView.setLayoutManager(Categorymanager);
 
-        //post type 1 recycler view
-        PostsType1 = new ArrayList<>();
+        //annonce recycler view
+        LinearLayoutManager Annoncemanager = new LinearLayoutManager(getContext(),LinearLayoutManager.HORIZONTAL,false);
+        AnnonceRecyclerView.setLayoutManager(Annoncemanager);
 
-        PostsType1.add(new PostType1Model(R.drawable.burger,"Chicken burger","100 gr chicken + tomato + cheese  Lettuce","200","description","burger"));
-        PostsType1.add(new PostType1Model(R.drawable.burger2,"Chicken burger","100 gr chicken + tomato + cheese  Lettuce","200","description","burger"));
-        PostsType1.add(new PostType1Model(R.drawable.burger3,"Chicken burger","100 gr chicken + tomato + cheese  Lettuce","200","description","burger"));
-        PostsType1.add(new PostType1Model(R.drawable.pizza,"Chicken pizza","100 gr chicken + tomato + cheese  Lettuce","200","description","burger"));
+        //post type 1 / 2
+        LinearLayoutManager PostType1Manager = new LinearLayoutManager(getContext(),LinearLayoutManager.HORIZONTAL,false);
+        ProductRecyclerView.setLayoutManager(PostType1Manager);
+        LinearLayoutManager PostType2Manager = new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false);
+        AllProductRecyclerView.setLayoutManager(PostType2Manager);
 
-        postType1Adapter = new PostType1Adapter(getActivity(), PostsType1);
-        ProductRecyclerView.setAdapter(postType1Adapter);
+        //fetch data
+        fetchDataFromDB();
 
-        LinearLayoutManager PostType1manager = new LinearLayoutManager(getContext(),LinearLayoutManager.HORIZONTAL,false);
-        ProductRecyclerView.setLayoutManager(PostType1manager);
-
-        //post type 2 recycler view
-        PostsType2 = new ArrayList<>();
-
-        PostsType2.add(new PostType1Model(R.drawable.pizza,"Chicken pizza","100 gr chicken + tomato + cheese  Lettuce","200","description","burger"));
-        PostsType2.add(new PostType1Model(R.drawable.burger,"Chicken burger","100 gr chicken + tomato + cheese  Lettuce","200","description","burger"));
-        PostsType2.add(new PostType1Model(R.drawable.burger,"Chicken burger","100 gr chicken + tomato + cheese  Lettuce","200","description","burger"));
-
-        postType2Adapter = new PostType2Adapter(getActivity(), PostsType2);
-        AllProductRecyclerView.setAdapter(postType2Adapter);
-
-        LinearLayoutManager PostType2manager = new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false);
-        AllProductRecyclerView.setLayoutManager(PostType2manager);
         return view;
     }
     private void InisializationOfFealds(){
@@ -96,5 +78,66 @@ public class HomeFragment extends Fragment {
         CategoryRecyclerView = view.findViewById(R.id.CategoryRecyclerView);
         ProductRecyclerView = view.findViewById(R.id.ProductRecyclerView);
         AllProductRecyclerView = view.findViewById(R.id.AllProductRecyclerView);
+        RefProduct = FirebaseDatabase.getInstance(getContext().getString(R.string.DBURL))
+                .getReference().child("Products");
+    }
+    private void fetchDataFromDB(){
+        ArrayList<Product> products = new ArrayList<>();
+        ArrayList<Product> AnnonceProducts = new ArrayList<>();
+        ArrayList<Product> BurgerProducts = new ArrayList<>();
+        ArrayList<Product> PizzaProducts = new ArrayList<>();
+        ArrayList<Product> SandwichProducts = new ArrayList<>();
+
+        RefProduct.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                products.clear();
+                for (DataSnapshot oneSnapshot : snapshot.getChildren()){
+                    Product product = oneSnapshot.getValue(Product.class);
+                    if (product != null && product.getAnnonce()) {
+                        // If the condition is true, add the product to the filtered list
+                        AnnonceProducts.add(product);
+                    }
+                    if (product != null && (product.getCategory().equals("Burger") || product.getCategory().equals("burger"))) {
+                        // If the condition is true, add the product to the filtered list
+                        BurgerProducts.add(product);
+                    }
+                    if (product != null && (product.getCategory().equals("Pizza") || product.getCategory().equals("pizza"))) {
+                        // If the condition is true, add the product to the filtered list
+                        PizzaProducts.add(product);
+                    }
+                    if (product != null && (product.getCategory().equals("Sandwich") || product.getCategory().equals("sandwich"))) {
+                        // If the condition is true, add the product to the filtered list
+                        SandwichProducts.add(product);
+                    }
+                    products.add(product);
+                }
+                annonceAdapter = new AnnonceAdapter(getActivity(), AnnonceProducts);
+                AnnonceRecyclerView.setAdapter(annonceAdapter);
+
+                if (categoryAdapter.GetCategory().equals("Burger")){
+                    postType1Adapter = new PostType1Adapter(getActivity(),BurgerProducts);
+                    postType1Adapter.notifyDataSetChanged();
+                }else if (categoryAdapter.GetCategory().equals("Pizza")){
+                    postType1Adapter = new PostType1Adapter(getActivity(),PizzaProducts);
+                    postType1Adapter.notifyDataSetChanged();
+                }else if (categoryAdapter.GetCategory().equals("Sandwich")){
+                    postType1Adapter = new PostType1Adapter(getActivity(),SandwichProducts);
+                    postType1Adapter.notifyDataSetChanged();
+                }else{
+                    postType1Adapter = new PostType1Adapter(getActivity(),products);
+                }
+
+                ProductRecyclerView.setAdapter(postType1Adapter);
+                postType2Adapter = new PostType2Adapter(getActivity(), products);
+                AllProductRecyclerView.setAdapter(postType2Adapter);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e("DatabaseError", "Operation canceled", error.toException());
+                Toast.makeText(getActivity(), "Database operation canceled: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }

@@ -1,26 +1,32 @@
 package com.example.foodapp.Adapters;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.foodapp.Models.PostType1Model;
+import com.example.foodapp.Models.Product;
 import com.example.foodapp.R;
 import com.example.foodapp.ViewHolders.AdminPostType1ViewHolder;
-import com.example.foodapp.ViewHolders.PostType1ViewHolder;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
 public class AdminPostType1Adapter extends RecyclerView.Adapter<AdminPostType1ViewHolder> {
     private Context context;
-    private ArrayList<PostType1Model> Posts;
-
-    public AdminPostType1Adapter(Context context, ArrayList<PostType1Model> posts) {
+    private ArrayList<Product> Posts;
+    private DatabaseReference RefProduct;
+    public AdminPostType1Adapter(Context context, ArrayList<Product> posts) {
         this.context = context;
         Posts = posts;
     }
@@ -35,13 +41,44 @@ public class AdminPostType1Adapter extends RecyclerView.Adapter<AdminPostType1Vi
     @Override
     public void onBindViewHolder(@NonNull AdminPostType1ViewHolder holder, int position) {
         Picasso.get().load(Posts.get(position).getIMG()).into(holder.PostIMG);
-        holder.PostTitle.setText(Posts.get(position).getTitle());
+        holder.PostTitle.setText(Posts.get(position).getName());
         holder.PostIngredients.setText(Posts.get(position).getIngredients());
         holder.PostPrice.setText(Posts.get(position).getPrice());
+        RefProduct = FirebaseDatabase.getInstance(context.getString(R.string.DBURL))
+                .getReference().child("Products");
         holder.DeleteBTN.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //delete
+                // delete the product from the database
+                AlertDialog.Builder mydialog = new AlertDialog.Builder(context);
+                mydialog.setTitle("Delete "+Posts.get(position).getName());
+                mydialog.setMessage("Do you really want to delete "
+                        +Posts.get(position).getName()+" ?");
+                mydialog.setPositiveButton("Oui", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        // deleting the product
+                        RefProduct.child(Posts.get(position).getID()).removeValue()
+                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        if(task.isSuccessful()){
+                                            Toast.makeText(context, "Product deleted", Toast.LENGTH_SHORT).show();
+                                        }else{
+                                            Toast.makeText(context, "Error , check your internet connexion", Toast.LENGTH_SHORT).show();
+
+                                        }
+                                    }
+                                });
+                    }
+                });
+                mydialog.setNegativeButton("Non", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                });
+                mydialog.show();
             }
         });
         holder.itemView.setOnClickListener(new View.OnClickListener() {

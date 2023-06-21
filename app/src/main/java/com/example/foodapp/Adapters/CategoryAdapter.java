@@ -10,6 +10,7 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.foodapp.Models.CategoryModel;
+import com.example.foodapp.Models.Product;
 import com.example.foodapp.R;
 import com.example.foodapp.ViewHolders.CategoryViewHolder;
 import com.squareup.picasso.Picasso;
@@ -19,7 +20,7 @@ import java.util.ArrayList;
 public class CategoryAdapter extends RecyclerView.Adapter<CategoryViewHolder> {
     private Context context;
     private ArrayList<CategoryModel> categorys;
-
+    private String category = "Burger";
     public CategoryAdapter(Context context, ArrayList<CategoryModel> categorys) {
         this.context = context;
         this.categorys = categorys;
@@ -55,6 +56,13 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryViewHolder> {
                     holder.CategoryTitle.setTextColor(primaryTextColor);
                     click[0] = false;
                 }
+                if (categorys.get(position).getTitle().equals("Pizza")){
+                    category = "Pizza";
+                }else if (categorys.get(position).getTitle().equals("Sandwich")){
+                    category = "Sandwich";
+                }else if (categorys.get(position).getTitle().equals("Burger")){
+                    category = "Burger";
+                }
             }
         });
     }
@@ -62,5 +70,8 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryViewHolder> {
     @Override
     public int getItemCount() {
         return categorys.size();
+    }
+    public String GetCategory(){
+        return category;
     }
 }

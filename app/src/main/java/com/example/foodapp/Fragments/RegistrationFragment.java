@@ -75,7 +75,6 @@ public class RegistrationFragment extends Fragment {
         ToSignUpInterface = view.findViewById(R.id.ToSignUpInterface);
         FacebookSignInBTN = view.findViewById(R.id.FacebookSignInBTN);
         GoogleSignInBTN = view.findViewById(R.id.GoogleSignInBTN);
-
         Auth = FirebaseAuth.getInstance();
     }
     private void ButtonRedirection(){
