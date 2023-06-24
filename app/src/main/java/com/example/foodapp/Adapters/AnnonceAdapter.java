@@ -1,6 +1,7 @@
 package com.example.foodapp.Adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,6 +9,8 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.foodapp.AdminDisplayProductActivity;
+import com.example.foodapp.DisplayProductActivity;
 import com.example.foodapp.Models.AnnonceModel;
 import com.example.foodapp.Models.Product;
 import com.example.foodapp.R;
@@ -40,6 +43,9 @@ public class AnnonceAdapter extends RecyclerView.Adapter<AnnonceViewHolder> {
             @Override
             public void onClick(View view) {
                 //annonce details
+                Intent i = new Intent(context, DisplayProductActivity.class);
+                i.putExtra("ProductID",annonces.get(position).getID());
+                context.startActivity(i);
             }
         });
     }

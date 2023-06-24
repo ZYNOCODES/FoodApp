@@ -3,6 +3,7 @@ package com.example.foodapp.Adapters;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.foodapp.AdminDisplayProductActivity;
 import com.example.foodapp.Models.Product;
 import com.example.foodapp.R;
 import com.example.foodapp.ViewHolders.AdminPostType2ViewHolder;
@@ -86,6 +88,9 @@ public class AdminPostType2Adapter extends RecyclerView.Adapter<AdminPostType2Vi
             @Override
             public void onClick(View view) {
                 //redirect to post details
+                Intent i = new Intent(context, AdminDisplayProductActivity.class);
+                i.putExtra("ProductID",Posts.get(position).getID());
+                context.startActivity(i);
             }
         });
     }

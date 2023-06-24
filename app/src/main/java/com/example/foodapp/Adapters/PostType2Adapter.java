@@ -1,6 +1,7 @@
 package com.example.foodapp.Adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,6 +9,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.foodapp.DisplayProductActivity;
 import com.example.foodapp.Models.Product;
 import com.example.foodapp.R;
 import com.example.foodapp.ViewHolders.PostType2ViewHolder;
@@ -41,6 +43,9 @@ public class PostType2Adapter extends RecyclerView.Adapter<PostType2ViewHolder> 
             @Override
             public void onClick(View view) {
                 //redirect to post details
+                Intent i = new Intent(context, DisplayProductActivity.class);
+                i.putExtra("ProductID",Posts.get(position).getID());
+                context.startActivity(i);
             }
         });
     }

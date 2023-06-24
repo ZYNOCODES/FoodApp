@@ -225,6 +225,7 @@
                 android:textColor="@color/white"
                 android:textSize="14sp" />
         </com.google.android.material.card.MaterialCardView>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
