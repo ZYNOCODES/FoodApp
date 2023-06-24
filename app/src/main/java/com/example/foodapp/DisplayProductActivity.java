@@ -4,16 +4,21 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
+import android.app.Dialog;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.foodapp.Models.Cart;
 import com.example.foodapp.Models.Product;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.card.MaterialCardView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -30,8 +35,9 @@ public class DisplayProductActivity extends AppCompatActivity {
     private TextView AboutOutPut,TitleOutPut,PriceOutPut,QuantityOutPut;
     private ImageView IMGOutPut,BackBTN;
     private String ProductID;
-    private DatabaseReference ProductRef,CartRef;
+    private DatabaseReference RefProduct,RefCart;
     private FirebaseAuth Auth;
+    private Dialog dialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,9 +46,13 @@ public class DisplayProductActivity extends AppCompatActivity {
         //init
         InisializationOfFealds();
         ButtonsRediraction();
+        dialog = new Dialog(DisplayProductActivity.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.dialog_wait1);
+        dialog.setCanceledOnTouchOutside(false);
 
         //get product details
-        ProductRef.addValueEventListener(new ValueEventListener() {
+        RefProduct.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 Product product = snapshot.getValue(Product.class);
@@ -58,7 +68,45 @@ public class DisplayProductActivity extends AppCompatActivity {
                 Toast.makeText(DisplayProductActivity.this, "Database operation canceled: " + error.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+        AddToCartBTN.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.show();
+                RefProduct.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        Product product = snapshot.getValue(Product.class);
+                        RefCart = FirebaseDatabase.getInstance(getString(R.string.DBURL))
+                                .getReference()
+                                .child("Users")
+                                .child(Auth.getCurrentUser().getUid())
+                                .child("Cart");
+                        RefCart = RefCart.push();
+                        String idd = RefCart.getKey();
+                        Cart cart = new Cart(idd,product,QuantityOutPut.getText().toString(),ModificationInPut.getText().toString());
+                        RefCart.setValue(cart)
+                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        if (task.isSuccessful()){
+                                            dialog.dismiss();
+                                            Toast.makeText(DisplayProductActivity.this, "Product added to cart", Toast.LENGTH_SHORT).show();
+                                        }else {
+                                            dialog.dismiss();
+                                            Toast.makeText(DisplayProductActivity.this, task.getException().toString(), Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                });
+                    }
 
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        Log.e("DatabaseError", "Operation canceled", error.toException());
+                        Toast.makeText(DisplayProductActivity.this, "Database operation canceled: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        });
     }
     private void InisializationOfFealds(){
         AddToCartBTN = findViewById(R.id.AddToCartBTN);
@@ -73,11 +121,11 @@ public class DisplayProductActivity extends AppCompatActivity {
         BackBTN = findViewById(R.id.BackBTN);
         ProductID = getIntent().getStringExtra("ProductID");
         Auth = FirebaseAuth.getInstance();
-        ProductRef = FirebaseDatabase.getInstance(getString(R.string.DBURL))
+        RefProduct = FirebaseDatabase.getInstance(getString(R.string.DBURL))
                 .getReference()
                 .child("Products")
                 .child(ProductID);
-        CartRef = FirebaseDatabase.getInstance(getString(R.string.DBURL))
+        RefCart = FirebaseDatabase.getInstance(getString(R.string.DBURL))
                 .getReference()
                 .child("Users")
                 .child(Auth.getCurrentUser().getUid())

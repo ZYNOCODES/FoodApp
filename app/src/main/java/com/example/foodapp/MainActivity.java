@@ -1,6 +1,7 @@
 package com.example.foodapp;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import android.graphics.PorterDuff;
 import android.os.Bundle;
@@ -12,14 +13,20 @@ import com.example.foodapp.Fragments.HomeFragment;
 import com.example.foodapp.Fragments.MyOrdersFragment;
 import com.example.foodapp.Fragments.ProfilFragment;
 
-public class MainActivity extends AppCompatActivity {
-    private ImageView Ic_Home,Ic_Profil,Ic_MyOrders,Ic_Cart;
+public class MainActivity extends AppCompatActivity implements IconColorChangeListener{
+    public ImageView Ic_Home,Ic_Profil,Ic_MyOrders,Ic_Cart;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         InisializationOfFealds();
         IconsOnClickListener();
+    }
+    @Override
+    public void changeIconColors() {
+        // Change the icon colors here
+        Ic_Home.setColorFilter(ContextCompat.getColor(this, R.color.PrimaryColor));
+        Ic_Cart.setColorFilter(ContextCompat.getColor(this, R.color.Gray));
     }
     private void InisializationOfFealds(){
         Ic_Home = findViewById(R.id.HomeIcon);
