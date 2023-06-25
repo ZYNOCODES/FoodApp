@@ -57,10 +57,10 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderViewHolder> {
                                 public void onClick(View view) {
                                         //cancel this order
                                         AlertDialog.Builder mydialog = new AlertDialog.Builder(context);
-                                        mydialog.setTitle("Delete "+orders.get(position).getID());
-                                        mydialog.setMessage("Do you really want to delete "
+                                        mydialog.setTitle("Supprimer cette commande ");
+                                        mydialog.setMessage("Voulez-vous vraiment supprimer cette commande "
                                                 +orders.get(position).getID()+" ?");
-                                        mydialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                        mydialog.setPositiveButton("Oui", new DialogInterface.OnClickListener() {
                                                 @Override
                                                 public void onClick(DialogInterface dialogInterface, int i) {
                                                         // deleting the product
@@ -69,15 +69,15 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderViewHolder> {
                                                                         @Override
                                                                         public void onComplete(@NonNull Task<Void> task) {
                                                                                 if(task.isSuccessful()){
-                                                                                        Toast.makeText(context, "Order deleted", Toast.LENGTH_SHORT).show();
+                                                                                        Toast.makeText(context, "La commande a été supprimée avec succès", Toast.LENGTH_SHORT).show();
                                                                                 }else{
-                                                                                        Toast.makeText(context, "Error , check your internet connexion", Toast.LENGTH_SHORT).show();
+                                                                                        Toast.makeText(context, "Erreur, vérifiez votre connexion internet.", Toast.LENGTH_SHORT).show();
                                                                                 }
                                                                         }
                                                                 });
                                                 }
                                         });
-                                        mydialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                        mydialog.setNegativeButton("Non", new DialogInterface.OnClickListener() {
                                                 @Override
                                                 public void onClick(DialogInterface dialogInterface, int i) {
                                                         dialogInterface.dismiss();

@@ -90,7 +90,7 @@ public class DisplayProductActivity extends AppCompatActivity {
                                     public void onComplete(@NonNull Task<Void> task) {
                                         if (task.isSuccessful()){
                                             dialog.dismiss();
-                                            Toast.makeText(DisplayProductActivity.this, "Product added to cart", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(DisplayProductActivity.this, "La commande a été ajoutée au panier", Toast.LENGTH_SHORT).show();
                                         }else {
                                             dialog.dismiss();
                                             Toast.makeText(DisplayProductActivity.this, task.getException().toString(), Toast.LENGTH_SHORT).show();

@@ -101,10 +101,10 @@ public class AdminConfirmeOrderActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 AlertDialog.Builder mydialog = new AlertDialog.Builder(AdminConfirmeOrderActivity.this);
-                mydialog.setTitle("Update "+order.getID());
-                mydialog.setMessage("Do you really want to update "
+                mydialog.setTitle("Confirmée cette commande "+order.getID());
+                mydialog.setMessage("Voulez-vous vraiment confirmée cette commande: "
                         +order.getID()+" ?");
-                mydialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                mydialog.setPositiveButton("Oui", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         // Update the product
@@ -114,7 +114,7 @@ public class AdminConfirmeOrderActivity extends AppCompatActivity {
                         updateOrderIntoDB(updates);
                     }
                 });
-                mydialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                mydialog.setNegativeButton("Non", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         dialogInterface.dismiss();
@@ -127,10 +127,10 @@ public class AdminConfirmeOrderActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 AlertDialog.Builder mydialog = new AlertDialog.Builder(AdminConfirmeOrderActivity.this);
-                mydialog.setTitle("Delete "+order.getID());
-                mydialog.setMessage("Do you really want to delete "
+                mydialog.setTitle("Annuler cette commande");
+                mydialog.setMessage("Voulez-vous vraiment annuler cette commande: "
                         +order.getID()+" ?");
-                mydialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                mydialog.setPositiveButton("Oui", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         // deleting the product
@@ -148,7 +148,7 @@ public class AdminConfirmeOrderActivity extends AppCompatActivity {
                                 });
                     }
                 });
-                mydialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                mydialog.setNegativeButton("Non", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         dialogInterface.dismiss();
@@ -209,7 +209,7 @@ public class AdminConfirmeOrderActivity extends AppCompatActivity {
                                             if (task.isSuccessful()){
                                                 dialog.dismiss();
                                                 onBackPressed();
-                                                Toast.makeText(AdminConfirmeOrderActivity.this, "Order Confirmed", Toast.LENGTH_SHORT).show();
+                                                Toast.makeText(AdminConfirmeOrderActivity.this, "La commande a été confirmé avec succès", Toast.LENGTH_SHORT).show();
                                             }else {
                                                 dialog.dismiss();
                                                 Toast.makeText(AdminConfirmeOrderActivity.this, task.getException().toString(), Toast.LENGTH_SHORT).show();

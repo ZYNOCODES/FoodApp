@@ -54,8 +54,8 @@ public class AdminPostType1Adapter extends RecyclerView.Adapter<AdminPostType1Vi
             public void onClick(View view) {
                 // delete the product from the database
                 AlertDialog.Builder mydialog = new AlertDialog.Builder(context);
-                mydialog.setTitle("Delete "+Posts.get(position).getName());
-                mydialog.setMessage("Do you really want to delete "
+                mydialog.setTitle("Supprimer cette publication");
+                mydialog.setMessage("Voulez-vous vraiment supprimer cette publication "
                         +Posts.get(position).getName()+" ?");
                 mydialog.setPositiveButton("Oui", new DialogInterface.OnClickListener() {
                     @Override
@@ -66,9 +66,9 @@ public class AdminPostType1Adapter extends RecyclerView.Adapter<AdminPostType1Vi
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
                                         if(task.isSuccessful()){
-                                            Toast.makeText(context, "Product deleted", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(context, "La publication a été supprimée avec succès", Toast.LENGTH_SHORT).show();
                                         }else{
-                                            Toast.makeText(context, "Error , check your internet connexion", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(context, "Erreur, vérifiez votre connexion internet.", Toast.LENGTH_SHORT).show();
 
                                         }
                                     }

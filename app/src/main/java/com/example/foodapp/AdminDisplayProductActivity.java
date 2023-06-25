@@ -96,10 +96,10 @@ public class AdminDisplayProductActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if (isNotEmpty()){
                     AlertDialog.Builder mydialog = new AlertDialog.Builder(AdminDisplayProductActivity.this);
-                    mydialog.setTitle("Update "+product.getName());
-                    mydialog.setMessage("Do you really want to update "
+                    mydialog.setTitle("Modifier cette publication "+product.getName());
+                    mydialog.setMessage("Voulez-vous vraiment modifier cette publication: "
                             +product.getName()+" ?");
-                    mydialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    mydialog.setPositiveButton("Oui", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
                             // Update the product
@@ -139,7 +139,7 @@ public class AdminDisplayProductActivity extends AppCompatActivity {
                             }
                         }
                     });
-                    mydialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    mydialog.setNegativeButton("Non", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
                             dialogInterface.dismiss();
@@ -221,7 +221,7 @@ public class AdminDisplayProductActivity extends AppCompatActivity {
                                 IMGOutPut.setImageBitmap(resizedBitmap);
                             } else {
                                 // Handle the case where resizing failed
-                                Toast.makeText(AdminDisplayProductActivity.this,"resizing failed", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(AdminDisplayProductActivity.this,"Le redimensionnement a échoué.", Toast.LENGTH_SHORT).show();
                             }
                         }
                     }
@@ -291,13 +291,13 @@ public class AdminDisplayProductActivity extends AppCompatActivity {
     }
     private boolean isNotEmpty(){
         if (TitleOutPut.getText().toString().isEmpty()){
-            Toast.makeText(AdminDisplayProductActivity.this, "Enter Product Name", Toast.LENGTH_SHORT).show();
+            Toast.makeText(AdminDisplayProductActivity.this, "Entrez le nom du produit", Toast.LENGTH_SHORT).show();
             return false;
         }else if (PriceOutPut.getText().toString().isEmpty()){
-            Toast.makeText(AdminDisplayProductActivity.this, "Enter Product Price", Toast.LENGTH_SHORT).show();
+            Toast.makeText(AdminDisplayProductActivity.this, "Entrez le prix du produit", Toast.LENGTH_SHORT).show();
             return false;
         }else if (AboutOutPut.getText().toString().isEmpty()){
-            Toast.makeText(AdminDisplayProductActivity.this, "Enter Product Description", Toast.LENGTH_SHORT).show();
+            Toast.makeText(AdminDisplayProductActivity.this, "Entrez la description du produit", Toast.LENGTH_SHORT).show();
             return false;
         }else {
             return true;
@@ -310,7 +310,7 @@ public class AdminDisplayProductActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()){
                             dialog.dismiss();
-                            Toast.makeText(AdminDisplayProductActivity.this, "Product updated", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(AdminDisplayProductActivity.this, "Le produit a été modifié", Toast.LENGTH_SHORT).show();
                         }else {
                             dialog.dismiss();
                             Toast.makeText(AdminDisplayProductActivity.this, task.getException().toString(), Toast.LENGTH_SHORT).show();

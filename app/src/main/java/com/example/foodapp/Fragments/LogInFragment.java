@@ -77,10 +77,10 @@ public class LogInFragment extends Fragment {
     }
     private boolean isNotEmpty(){
         if (EmailInPut.getText().toString().isEmpty()){
-            Toast.makeText(getActivity(), "Enter your email", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "Entrer votre Email", Toast.LENGTH_SHORT).show();
             return false;
         }else if (PasswordInPut.getText().toString().isEmpty()){
-            Toast.makeText(getActivity(), "Enter your password", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "Entrer votre Mot de passe", Toast.LENGTH_SHORT).show();
             return false;
         }else {
             return true;
@@ -94,7 +94,7 @@ public class LogInFragment extends Fragment {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()){
-                    if (my_email.equals("FratelloFood@admin.com")){
+                    if (my_email.equals("FratelloFood@admin.com") || my_email.equals("fratellofood@admin.com")){
                         Intent i = new Intent(getActivity(), AdminMainActivity.class);
                         startActivity(i);
                         getActivity().finish();

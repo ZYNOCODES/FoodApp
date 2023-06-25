@@ -54,10 +54,10 @@ public class AdminPostType2Adapter extends RecyclerView.Adapter<AdminPostType2Vi
             public void onClick(View view) {
                 // delete the product from the database
                 AlertDialog.Builder mydialog = new AlertDialog.Builder(context);
-                mydialog.setTitle("Delete "+Posts.get(position).getName());
-                mydialog.setMessage("Do you really want to delete "
+                mydialog.setTitle("Supprimer cette publication");
+                mydialog.setMessage("Voulez-vous vraiment supprimer cette publication "
                         +Posts.get(position).getName()+" ?");
-                mydialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                mydialog.setPositiveButton("Oui", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         // deleting the product
@@ -66,16 +66,16 @@ public class AdminPostType2Adapter extends RecyclerView.Adapter<AdminPostType2Vi
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
                                         if(task.isSuccessful()){
-                                            Toast.makeText(context, "Product deleted", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(context, "La publication a été supprimée avec succès", Toast.LENGTH_SHORT).show();
                                         }else{
-                                            Toast.makeText(context, "Error , check your internet connexion", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(context, "Erreur, vérifiez votre connexion internet.", Toast.LENGTH_SHORT).show();
 
                                         }
                                     }
                                 });
                     }
                 });
-                mydialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                mydialog.setNegativeButton("Non", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         dialogInterface.dismiss();

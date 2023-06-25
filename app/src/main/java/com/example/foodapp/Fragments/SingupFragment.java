@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.foodapp.AdminMainActivity;
 import com.example.foodapp.MainActivity;
 import com.example.foodapp.Models.User;
 import com.example.foodapp.R;
@@ -83,16 +84,16 @@ public class SingupFragment extends Fragment {
     }
     private boolean isNotEmpty(){
         if (EmailInPut.getText().toString().isEmpty()){
-            Toast.makeText(getActivity(), "Enter your email", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "Entrer votre Email", Toast.LENGTH_SHORT).show();
             return false;
         }else if (PassordInPut.getText().toString().isEmpty()){
-            Toast.makeText(getActivity(), "Enter your password", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "Entrer votre Mot de pass", Toast.LENGTH_SHORT).show();
             return false;
         }else if (FullNameInPut.getText().toString().isEmpty()){
-            Toast.makeText(getActivity(), "Enter your Full name", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "Entrer votre Nom complet", Toast.LENGTH_SHORT).show();
             return false;
         }else if (PhoneInPut.getText().toString().isEmpty()){
-            Toast.makeText(getActivity(), "Enter your Phone number", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "Entrer votre Numero de telephone", Toast.LENGTH_SHORT).show();
             return false;
         }else {
             return true;
@@ -120,9 +121,15 @@ public class SingupFragment extends Fragment {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()){
-                    Intent i = new Intent(getActivity(), MainActivity.class);
-                    startActivity(i);
-                    getActivity().finish();
+                    if (user.getEmail().equals("FratelloFood@admin.com") || user.getEmail().equals("fratellofood@admin.com")){
+                        Intent i = new Intent(getActivity(), AdminMainActivity.class);
+                        startActivity(i);
+                        getActivity().finish();
+                    }else {
+                        Intent i = new Intent(getActivity(), MainActivity.class);
+                        startActivity(i);
+                        getActivity().finish();
+                    }
                 }else {
                     Toast.makeText(getActivity(),task.getException().toString(),Toast.LENGTH_SHORT).show();
                 }

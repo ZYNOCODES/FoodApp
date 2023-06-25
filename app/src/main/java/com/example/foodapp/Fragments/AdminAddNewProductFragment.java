@@ -50,7 +50,6 @@ public class AdminAddNewProductFragment extends Fragment {
     private MaterialCardView AddNewProductBTN;
     private Uri image_file;
     private String ImageURL;
-    private FirebaseAuth Auth;
     private StorageReference ProductImgref;
     private DatabaseReference RefProduct;
     private Dialog dialog;
@@ -123,7 +122,6 @@ public class AdminAddNewProductFragment extends Fragment {
         AboutInPut = view.findViewById(R.id.AboutInPut);
         AnnonceCheckBox = view.findViewById(R.id.AnnonceCheckBox);
         AddNewProductBTN = view.findViewById(R.id.AddNewProductBTN);
-        Auth = FirebaseAuth.getInstance();
         RefProduct = FirebaseDatabase.getInstance(getString(R.string.DBURL))
                 .getReference().child("Products");
         ProductImgref = FirebaseStorage.getInstance().getReference()
@@ -154,7 +152,7 @@ public class AdminAddNewProductFragment extends Fragment {
                                 AddIMGInPut.setImageBitmap(resizedBitmap);
                             } else {
                                 // Handle the case where resizing failed
-                                Toast.makeText(getActivity(),"resizing failed", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getActivity(),"Le redimensionnement a échoué.", Toast.LENGTH_SHORT).show();
                             }
                         }
                     }
@@ -216,19 +214,19 @@ public class AdminAddNewProductFragment extends Fragment {
     }
     private boolean isNotEmpty(){
         if (NameInPut.getText().toString().isEmpty()){
-            Toast.makeText(getActivity(), "Enter Product Name", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "Entrez le nom du produit", Toast.LENGTH_SHORT).show();
             return false;
         }else if (PriceInPut.getText().toString().isEmpty()){
-            Toast.makeText(getActivity(), "Enter Product Price", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "Entrez le prix du produit", Toast.LENGTH_SHORT).show();
             return false;
         }else if (IngredientsInPut.getText().toString().isEmpty()){
-            Toast.makeText(getActivity(), "Enter Product Ingredients", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "Entrez les ingredients du produit", Toast.LENGTH_SHORT).show();
             return false;
         }else if (CategoryInPut.getText().toString().isEmpty()){
-            Toast.makeText(getActivity(), "Enter Product Category", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "Entrez la catégorie de produit", Toast.LENGTH_SHORT).show();
             return false;
         }else if (AboutInPut.getText().toString().isEmpty()){
-            Toast.makeText(getActivity(), "Enter Product Description", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "Entrez la description du produit", Toast.LENGTH_SHORT).show();
             return false;
         }else {
             return true;
@@ -249,7 +247,7 @@ public class AdminAddNewProductFragment extends Fragment {
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()){
                             dialog.dismiss();
-                            Toast.makeText(getActivity(), "Product added", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), "Le produit a été ajoutée", Toast.LENGTH_SHORT).show();
                         }else {
                             dialog.dismiss();
                             Toast.makeText(getActivity(), task.getException().toString(), Toast.LENGTH_SHORT).show();

@@ -199,7 +199,7 @@ public class CartFragment extends Fragment {
                                         @Override
                                         public void onComplete(@NonNull Task<Void> task) {
                                             if(task.isSuccessful()){
-                                                Toast.makeText(getActivity(), "Product added", Toast.LENGTH_SHORT).show();
+                                                Toast.makeText(getActivity(), "La commande a été ajoutée", Toast.LENGTH_SHORT).show();
                                             }
                                         }
                                     });

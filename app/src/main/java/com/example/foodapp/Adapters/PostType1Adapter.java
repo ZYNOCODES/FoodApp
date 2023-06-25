@@ -78,7 +78,7 @@ public class PostType1Adapter extends RecyclerView.Adapter<PostType1ViewHolder> 
                             public void onComplete(@NonNull Task<Void> task) {
                                 if (task.isSuccessful()){
                                     dialog.dismiss();
-                                    Toast.makeText(context, "Product added to cart", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(context, "La commande a été ajoutée au panier", Toast.LENGTH_SHORT).show();
                                 }else {
                                     dialog.dismiss();
                                     Toast.makeText(context, task.getException().toString(), Toast.LENGTH_SHORT).show();

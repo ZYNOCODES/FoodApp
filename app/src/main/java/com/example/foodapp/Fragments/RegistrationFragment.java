@@ -118,6 +118,7 @@ public class RegistrationFragment extends Fragment {
             } catch (ApiException e) {
                 // Google Sign In failed
                 Log.w(TAG, "Google sign in failed", e);
+                Toast.makeText(getActivity(),"Échec de la connexion avec Google",Toast.LENGTH_SHORT).show();
                 dialog.dismiss();
             }
         }
@@ -137,7 +138,7 @@ public class RegistrationFragment extends Fragment {
                             dialog.dismiss();
                         } else {
                             dialog.dismiss();
-                            Toast.makeText(getActivity(),"Login failed",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(),"échec de la connexion",Toast.LENGTH_SHORT).show();
                         }
                     }
                 });

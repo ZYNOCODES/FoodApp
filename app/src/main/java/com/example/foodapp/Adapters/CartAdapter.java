@@ -60,9 +60,9 @@ public class CartAdapter extends RecyclerView.Adapter<CartViewHolder>{
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
                                 if(task.isSuccessful()){
-                                    Toast.makeText(context, "Product deleted", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(context, "La comande a été supprimée avec succès du panier", Toast.LENGTH_SHORT).show();
                                 }else{
-                                    Toast.makeText(context, "Error , check your internet connexion", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(context, "Erreur, vérifiez votre connexion internet.", Toast.LENGTH_SHORT).show();
 
                                 }
                             }
