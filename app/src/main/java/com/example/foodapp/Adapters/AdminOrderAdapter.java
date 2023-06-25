@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.foodapp.Models.OrderModel;
+import com.example.foodapp.Models.Order;
 import com.example.foodapp.R;
 import com.example.foodapp.ViewHolders.AdminOrderViewHolder;
 
@@ -16,9 +16,9 @@ import java.util.ArrayList;
 
 public class AdminOrderAdapter extends RecyclerView.Adapter<AdminOrderViewHolder> {
     private Context context;
-    private ArrayList<OrderModel> orders;
+    private ArrayList<Order> orders;
 
-    public AdminOrderAdapter(Context context, ArrayList<OrderModel> orders) {
+    public AdminOrderAdapter(Context context, ArrayList<Order> orders) {
         this.context = context;
         this.orders = orders;
     }

@@ -1,0 +1,116 @@
+package com.example.foodapp;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import android.app.Dialog;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.view.Window;
+import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.example.foodapp.Adapters.CartAdapter;
+import com.example.foodapp.Adapters.MyOrderAdapter;
+import com.example.foodapp.Adapters.OrderAdapter;
+import com.example.foodapp.Models.Cart;
+import com.example.foodapp.Models.Order;
+import com.example.foodapp.Models.Product;
+import com.google.android.material.card.MaterialCardView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
+
+public class DisplayOrderActivity extends AppCompatActivity {
+    private DatabaseReference RefOrder;
+    private MyOrderAdapter myOrderAdapter;
+    private RecyclerView CartRecyclerView;
+    private TextView DeliveryCartPrice, TotleCartPrice, TotleItemsPrice, LocationOutPut, DeleveryNotesOutPut;
+    private String OrderID;
+    private ImageView CancelBTN;
+    private MaterialCardView DeleveryCard;
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_display_order);
+
+        //init
+        InisializationOfFealds();
+        ButtonsRediraction();
+
+        //recycler view
+        LinearLayoutManager manager = new LinearLayoutManager(DisplayOrderActivity.this,LinearLayoutManager.VERTICAL,false);
+        CartRecyclerView.setLayoutManager(manager);
+
+        //fetch data
+        fetchDataFromDB();
+
+
+    }
+    private void InisializationOfFealds(){
+        CartRecyclerView = findViewById(R.id.CartRecyclerView);
+        CancelBTN = findViewById(R.id.CancelBTN);
+        DeliveryCartPrice = findViewById(R.id.DeliveryCartPrice);
+        TotleCartPrice = findViewById(R.id.TotleCartPrice);
+        TotleItemsPrice = findViewById(R.id.TotleItemsPrice);
+        LocationOutPut = findViewById(R.id.LocationOutPut);
+        DeleveryNotesOutPut = findViewById(R.id.DeleveryNotesOutPut);
+        DeleveryCard = findViewById(R.id.DeleveryCard);
+        OrderID = getIntent().getStringExtra("OrderID");
+        RefOrder = FirebaseDatabase.getInstance(getString(R.string.DBURL))
+                .getReference()
+                .child("Orders")
+                .child(OrderID);
+    }
+    private void ButtonsRediraction(){
+        CancelBTN.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
+    }
+    private void fetchDataFromDB(){
+        RefOrder.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Order order = snapshot.getValue(Order.class);
+                final int[] totalItem = {0};
+                TotleCartPrice.setText(String.valueOf(order.getPrice()));
+                for (int i = 0 ; i < order.getProducts().size() ; i++){
+                    totalItem[0] = totalItem[0] + Integer.parseInt(order.getProducts().get(i).getProduct().getPrice());
+                }
+                TotleItemsPrice.setText(String.valueOf(totalItem[0]));
+                DeliveryCartPrice.setText(String.valueOf(Integer.parseInt(order.getPrice()) - totalItem[0]));
+                if (order.getType().equals("a domicile")){
+                    DeleveryCard.setVisibility(View.GONE);
+                }else {
+                    DeleveryCard.setVisibility(View.VISIBLE);
+                    LocationOutPut.setText(String.valueOf(order.getLocation()));
+                    DeleveryNotesOutPut.setText(String.valueOf(order.getLocationNotes()));
+                }
+                myOrderAdapter = new MyOrderAdapter(DisplayOrderActivity.this,order.getProducts());
+                CartRecyclerView.setAdapter(myOrderAdapter);
+
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e("DatabaseError", "Operation canceled", error.toException());
+                Toast.makeText(DisplayOrderActivity.this, "Database operation canceled: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+}

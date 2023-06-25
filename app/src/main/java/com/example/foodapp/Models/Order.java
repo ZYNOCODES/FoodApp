@@ -1,6 +1,8 @@
 package com.example.foodapp.Models;
 
-public class OrderModel {
+import java.util.ArrayList;
+
+public class Order {
     private String ID;
     private String Type;
     private String Location;
@@ -8,8 +10,9 @@ public class OrderModel {
     private String Price;
     private String ClientID;
     private Boolean Confirmation;
+    private ArrayList<Cart> Products;
 
-    public OrderModel(String ID, String type, String location, String locationNotes, String price, String clientID, Boolean confirmation) {
+    public Order(String ID, String type, String location, String locationNotes, String price, String clientID, Boolean confirmation, ArrayList<Cart> products) {
         this.ID = ID;
         Type = type;
         Location = location;
@@ -17,30 +20,26 @@ public class OrderModel {
         Price = price;
         ClientID = clientID;
         Confirmation = confirmation;
+        Products = products;
     }
 
-    public OrderModel(String ID, String type, String location, String locationNotes, String price) {
+    public Order(String ID, String type, String price, String clientID, Boolean confirmation, ArrayList<Cart> products) {
         this.ID = ID;
         Type = type;
-        Location = location;
-        LocationNotes = locationNotes;
         Price = price;
-    }
-
-    public OrderModel(String ID, String price, Boolean confirmation) {
-        this.ID = ID;
-        Price = price;
+        ClientID = clientID;
         Confirmation = confirmation;
+        Products = products;
     }
 
-    public OrderModel(String ID, String type, String price, Boolean confirmation) {
+    public Order(String ID, String type, String price, Boolean confirmation) {
         this.ID = ID;
         Type = type;
         Price = price;
         Confirmation = confirmation;
     }
 
-    public OrderModel() {
+    public Order() {
     }
 
     public String getID() {
@@ -97,5 +96,13 @@ public class OrderModel {
 
     public void setConfirmation(Boolean confirmation) {
         Confirmation = confirmation;
+    }
+
+    public ArrayList<Cart> getProducts() {
+        return Products;
+    }
+
+    public void setProducts(ArrayList<Cart> products) {
+        Products = products;
     }
 }

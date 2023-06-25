@@ -1,5 +1,6 @@
 package com.example.foodapp.Fragments;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.PorterDuff;
@@ -16,7 +17,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,8 +29,11 @@ import com.example.foodapp.Adapters.CartAdapter;
 import com.example.foodapp.IconColorChangeListener;
 import com.example.foodapp.MainActivity;
 import com.example.foodapp.Models.Cart;
+import com.example.foodapp.Models.Order;
 import com.example.foodapp.Models.Product;
 import com.example.foodapp.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.card.MaterialCardView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -40,17 +46,18 @@ import java.util.ArrayList;
 
 public class CartFragment extends Fragment {
     private View view;
-    private MaterialCardView DeleveryNotesInPut, PlaceMYOrderBTN;
+    private MaterialCardView DeleveryNotes, PlaceMYOrderBTN;
     private CheckBox DeleveryCheckBox;
-    private DatabaseReference RefCart;
+    private DatabaseReference RefCart,RefOrder;
     private FirebaseAuth Auth;
     private CartAdapter cartAdapter;
     private RecyclerView CartRecyclerView;
     private LinearLayout AddToCartBTN;
-    private TextView DeliveryCartPrice, TotleCartPrice, TotleItemsPrice;
+    private TextView DeliveryCartPrice, TotleCartPrice, TotleItemsPrice, LocationOutPut;
     private ArrayList<Cart> products;
     private IconColorChangeListener iconColorChangeListener;
-
+    private Dialog dialog;
+    private EditText DeleveryNotesInPut;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -59,6 +66,10 @@ public class CartFragment extends Fragment {
         //init
         InisializationOfFealds();
         ButtonRedirection();
+        dialog = new Dialog(getActivity());
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.dialog_wait1);
+        dialog.setCanceledOnTouchOutside(false);
 
         //recycler view
         LinearLayoutManager manager = new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false);
@@ -82,30 +93,35 @@ public class CartFragment extends Fragment {
     }
 
     private void InisializationOfFealds(){
-        DeleveryNotesInPut = view.findViewById(R.id.DeleveryNotesInPut);
+        DeleveryNotes = view.findViewById(R.id.DeleveryNotes);
         DeleveryCheckBox = view.findViewById(R.id.DeleveryCheckBox);
-        DeleveryNotesInPut.setVisibility(View.GONE);
+        DeleveryNotes.setVisibility(View.GONE);
         CartRecyclerView = view.findViewById(R.id.CartRecyclerView);
         AddToCartBTN = view.findViewById(R.id.AddToCartBTN);
         PlaceMYOrderBTN = view.findViewById(R.id.PlaceMYOrderBTN);
         DeliveryCartPrice = view.findViewById(R.id.DeliveryCartPrice);
         TotleCartPrice = view.findViewById(R.id.TotleCartPrice);
         TotleItemsPrice = view.findViewById(R.id.TotleItemsPrice);
+        LocationOutPut = view.findViewById(R.id.LocationOutPut);
+        DeleveryNotesInPut = view.findViewById(R.id.DeleveryNotesInPut);
         Auth = FirebaseAuth.getInstance();
         RefCart = FirebaseDatabase.getInstance(getString(R.string.DBURL))
                 .getReference()
                 .child("Users")
                 .child(Auth.getCurrentUser().getUid())
                 .child("Cart");
+        RefOrder = FirebaseDatabase.getInstance(getString(R.string.DBURL))
+                .getReference()
+                .child("Orders");
     }
     private void ButtonRedirection(){
         DeleveryCheckBox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (DeleveryCheckBox.isChecked()){
-                    DeleveryNotesInPut.setVisibility(View.VISIBLE);
+                    DeleveryNotes.setVisibility(View.VISIBLE);
                 }else {
-                    DeleveryNotesInPut.setVisibility(View.GONE);
+                    DeleveryNotes.setVisibility(View.GONE);
                 }
             }
         });
@@ -118,6 +134,26 @@ public class CartFragment extends Fragment {
                 fragmentTransaction.commit();
                 // Inside your method where you want to change the icon colors
                 iconColorChangeListener.changeIconColors();
+            }
+        });
+        PlaceMYOrderBTN.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (products.size() > 0){
+                    RefOrder = FirebaseDatabase.getInstance(getString(R.string.DBURL))
+                            .getReference()
+                            .child("Orders");
+                    RefOrder = RefOrder.push();
+                    String idd = RefOrder.getKey();
+                    if (!DeleveryCheckBox.isChecked()){
+                        Order order = new Order(idd,"a domicile",String.valueOf(TotleCartPrice.getText()),Auth.getCurrentUser().getUid(),false,products);
+                        saveOrderIntoDB(order);
+                    }else {
+                        Order order = new Order(idd,"Livraison",String.valueOf(LocationOutPut.getText()),String.valueOf(DeleveryNotesInPut.getText()),
+                                String.valueOf(TotleCartPrice.getText()),Auth.getCurrentUser().getUid(),false,products);
+                        saveOrderIntoDB(order);
+                    }
+                }
             }
         });
     }
@@ -149,5 +185,29 @@ public class CartFragment extends Fragment {
                 Toast.makeText(getActivity(), "Database operation canceled: " + error.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+    }
+    protected void saveOrderIntoDB(Order order){
+        RefOrder.setValue(order)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()){
+                            dialog.dismiss();
+                            //clear cart
+                            RefCart.removeValue()
+                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            if(task.isSuccessful()){
+                                                Toast.makeText(getActivity(), "Product added", Toast.LENGTH_SHORT).show();
+                                            }
+                                        }
+                                    });
+                        }else {
+                            dialog.dismiss();
+                            Toast.makeText(getActivity(), task.getException().toString(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
     }
 }
