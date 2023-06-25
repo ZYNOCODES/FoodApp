@@ -43,6 +43,7 @@
         </LinearLayout>
 
         <ImageView
+            android:id="@+id/CancelBTN"
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:src="@drawable/xmark_solid"
@@ -93,6 +94,7 @@
                             android:textColor="@color/Gray"
                             android:fontFamily="@font/poppins_medium"/>
                         <TextView
+                            android:id="@+id/ClientFullName"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Boumrar Zine Eddine"
@@ -117,6 +119,7 @@
                             android:textColor="@color/Gray"
                             android:fontFamily="@font/poppins_medium"/>
                         <TextView
+                            android:id="@+id/ClientPhoneNumber"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="0778295266"
@@ -126,7 +129,8 @@
                             android:fontFamily="@font/poppins_regular"/>
                     </LinearLayout>
                     <LinearLayout
-                        android:layout_width="wrap_content"
+                        android:id="@+id/DeleveryCard"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
                         android:layout_gravity="center|start"
@@ -141,6 +145,7 @@
                             android:textColor="@color/Gray"
                             android:fontFamily="@font/poppins_medium"/>
                         <TextView
+                            android:id="@+id/LocationOutPut"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Jl. Jayakatwang no 301"
@@ -148,37 +153,39 @@
                             android:textAlignment="textStart"
                             android:textColor="@color/SecondTextColor"
                             android:fontFamily="@font/poppins_regular"/>
-                    </LinearLayout>
-                    <com.google.android.material.card.MaterialCardView
-                        android:layout_width="match_parent"
-                        android:layout_height="40dp"
-                        app:cardCornerRadius="20dp"
-                        app:cardBackgroundColor="@color/LowGray"
-                        android:layout_gravity="center">
-                        <LinearLayout
+                        <com.google.android.material.card.MaterialCardView
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:orientation="horizontal">
-                            <ImageView
-                                android:layout_width="25dp"
-                                android:layout_height="25dp"
-                                android:src="@drawable/list"
-                                android:layout_gravity="center|start"
-                                app:tint="@color/Gray"
-                                android:layout_margin="10dp"/>
-                            <TextView
+                            android:layout_height="40dp"
+                            app:cardCornerRadius="20dp"
+                            app:cardBackgroundColor="@color/LowGray"
+                            android:layout_gravity="center">
+                            <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:hint="Add a note of delivery address"
-                                android:textColor="@color/SecondTextColor"
-                                android:textSize="14sp"
-                                android:fontFamily="@font/poppins_regular"
-                                android:background="@color/Transparent"
-                                android:layout_gravity="center"
-                                android:gravity="center|start"/>
-                        </LinearLayout>
+                                android:orientation="horizontal">
+                                <ImageView
+                                    android:layout_width="25dp"
+                                    android:layout_height="25dp"
+                                    android:src="@drawable/list"
+                                    android:layout_gravity="center|start"
+                                    app:tint="@color/Gray"
+                                    android:layout_margin="10dp"/>
+                                <TextView
+                                    android:id="@+id/DeleveryNotesOutPut"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:hint="Add a note of delivery address"
+                                    android:textColor="@color/SecondTextColor"
+                                    android:textSize="14sp"
+                                    android:fontFamily="@font/poppins_regular"
+                                    android:background="@color/Transparent"
+                                    android:layout_gravity="center"
+                                    android:gravity="center|start"/>
+                            </LinearLayout>
 
-                    </com.google.android.material.card.MaterialCardView>
+                        </com.google.android.material.card.MaterialCardView>
+                    </LinearLayout>
+
 
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
@@ -211,322 +218,10 @@
                             android:fontFamily="@font/poppins_medium"
                             android:layout_weight="1"/>
                     </LinearLayout>
-                    <LinearLayout
+                    <androidx.recyclerview.widget.RecyclerView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_gravity="center"
-                        android:gravity="center|start">
-                        <com.google.android.material.card.MaterialCardView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            app:cardCornerRadius="10dp"
-                            android:layout_margin="10dp">
-                            <ImageView
-                                android:layout_width="72dp"
-                                android:layout_height="82dp"
-                                android:src="@drawable/cv"
-                                android:layout_gravity="center|start"
-                                android:scaleType="centerCrop"/>
-                        </com.google.android.material.card.MaterialCardView>
-
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            android:layout_weight="1"
-                            android:layout_margin="5dp">
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Fruit salad mix"
-                                android:textSize="16sp"
-                                android:textColor="@color/SecondTextColor"
-                                android:fontFamily="@font/poppins_medium" />
-                            <LinearLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:orientation="horizontal"
-                                android:layout_gravity="center|start"
-                                android:gravity="center">
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="18.500"
-                                    android:textSize="16sp"
-                                    android:textColor="@color/Gray"
-                                    android:fontFamily="@font/poppins_medium" />
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="DZ"
-                                    android:textSize="14sp"
-                                    android:textColor="@color/Gray"
-                                    android:fontFamily="@font/poppins_regular"
-                                    android:layout_marginStart="5dp"/>
-                            </LinearLayout>
-                            <LinearLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:orientation="horizontal"
-                                android:layout_gravity="center|start"
-                                android:gravity="center">
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="Quantity :"
-                                    android:textSize="12sp"
-                                    android:textColor="@color/Gray"
-                                    android:fontFamily="@font/poppins_regular" />
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="03"
-                                    android:textSize="12sp"
-                                    android:textColor="@color/Gray"
-                                    android:fontFamily="@font/poppins_regular"
-                                    android:layout_marginStart="5dp"/>
-                            </LinearLayout>
-                        </LinearLayout>
-
-                    </LinearLayout>
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_gravity="center"
-                        android:gravity="center|start">
-                        <com.google.android.material.card.MaterialCardView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            app:cardCornerRadius="10dp"
-                            android:layout_margin="10dp">
-                            <ImageView
-                                android:layout_width="72dp"
-                                android:layout_height="82dp"
-                                android:src="@drawable/cv"
-                                android:layout_gravity="center|start"
-                                android:scaleType="centerCrop"/>
-                        </com.google.android.material.card.MaterialCardView>
-
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            android:layout_weight="1"
-                            android:layout_margin="5dp">
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Fruit salad mix"
-                                android:textSize="16sp"
-                                android:textColor="@color/SecondTextColor"
-                                android:fontFamily="@font/poppins_medium" />
-                            <LinearLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:orientation="horizontal"
-                                android:layout_gravity="center|start"
-                                android:gravity="center">
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="18.500"
-                                    android:textSize="16sp"
-                                    android:textColor="@color/Gray"
-                                    android:fontFamily="@font/poppins_medium" />
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="DZ"
-                                    android:textSize="14sp"
-                                    android:textColor="@color/Gray"
-                                    android:fontFamily="@font/poppins_regular"
-                                    android:layout_marginStart="5dp"/>
-                            </LinearLayout>
-                            <LinearLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:orientation="horizontal"
-                                android:layout_gravity="center|start"
-                                android:gravity="center">
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="Quantity :"
-                                    android:textSize="12sp"
-                                    android:textColor="@color/Gray"
-                                    android:fontFamily="@font/poppins_regular" />
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="03"
-                                    android:textSize="12sp"
-                                    android:textColor="@color/Gray"
-                                    android:fontFamily="@font/poppins_regular"
-                                    android:layout_marginStart="5dp"/>
-                            </LinearLayout>
-                        </LinearLayout>
-
-                    </LinearLayout>
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_gravity="center"
-                        android:gravity="center|start">
-                        <com.google.android.material.card.MaterialCardView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            app:cardCornerRadius="10dp"
-                            android:layout_margin="10dp">
-                            <ImageView
-                                android:layout_width="72dp"
-                                android:layout_height="82dp"
-                                android:src="@drawable/cv"
-                                android:layout_gravity="center|start"
-                                android:scaleType="centerCrop"/>
-                        </com.google.android.material.card.MaterialCardView>
-
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            android:layout_weight="1"
-                            android:layout_margin="5dp">
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Fruit salad mix"
-                                android:textSize="16sp"
-                                android:textColor="@color/SecondTextColor"
-                                android:fontFamily="@font/poppins_medium" />
-                            <LinearLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:orientation="horizontal"
-                                android:layout_gravity="center|start"
-                                android:gravity="center">
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="18.500"
-                                    android:textSize="16sp"
-                                    android:textColor="@color/Gray"
-                                    android:fontFamily="@font/poppins_medium" />
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="DZ"
-                                    android:textSize="14sp"
-                                    android:textColor="@color/Gray"
-                                    android:fontFamily="@font/poppins_regular"
-                                    android:layout_marginStart="5dp"/>
-                            </LinearLayout>
-                            <LinearLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:orientation="horizontal"
-                                android:layout_gravity="center|start"
-                                android:gravity="center">
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="Quantity :"
-                                    android:textSize="12sp"
-                                    android:textColor="@color/Gray"
-                                    android:fontFamily="@font/poppins_regular" />
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="03"
-                                    android:textSize="12sp"
-                                    android:textColor="@color/Gray"
-                                    android:fontFamily="@font/poppins_regular"
-                                    android:layout_marginStart="5dp"/>
-                            </LinearLayout>
-                        </LinearLayout>
-
-                    </LinearLayout>
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_gravity="center"
-                        android:gravity="center|start">
-                        <com.google.android.material.card.MaterialCardView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            app:cardCornerRadius="10dp"
-                            android:layout_margin="10dp">
-                            <ImageView
-                                android:layout_width="72dp"
-                                android:layout_height="82dp"
-                                android:src="@drawable/cv"
-                                android:layout_gravity="center|start"
-                                android:scaleType="centerCrop"/>
-                        </com.google.android.material.card.MaterialCardView>
-
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            android:layout_weight="1"
-                            android:layout_margin="5dp">
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Fruit salad mix"
-                                android:textSize="16sp"
-                                android:textColor="@color/SecondTextColor"
-                                android:fontFamily="@font/poppins_medium" />
-                            <LinearLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:orientation="horizontal"
-                                android:layout_gravity="center|start"
-                                android:gravity="center">
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="18.500"
-                                    android:textSize="16sp"
-                                    android:textColor="@color/Gray"
-                                    android:fontFamily="@font/poppins_medium" />
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="DZ"
-                                    android:textSize="14sp"
-                                    android:textColor="@color/Gray"
-                                    android:fontFamily="@font/poppins_regular"
-                                    android:layout_marginStart="5dp"/>
-                            </LinearLayout>
-                            <LinearLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:orientation="horizontal"
-                                android:layout_gravity="center|start"
-                                android:gravity="center">
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="Quantity :"
-                                    android:textSize="12sp"
-                                    android:textColor="@color/Gray"
-                                    android:fontFamily="@font/poppins_regular" />
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="03"
-                                    android:textSize="12sp"
-                                    android:textColor="@color/Gray"
-                                    android:fontFamily="@font/poppins_regular"
-                                    android:layout_marginStart="5dp"/>
-                            </LinearLayout>
-                        </LinearLayout>
-
-                    </LinearLayout>
+                        android:id="@+id/CartRecyclerView"/>
 
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
@@ -584,6 +279,7 @@
                                 android:layout_gravity="center"
                                 android:gravity="center"/>
                             <TextView
+                                android:id="@+id/TotleItemsPrice"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="18.500"
@@ -625,15 +321,17 @@
                                 android:fontFamily="@font/poppins_medium"
                                 android:layout_gravity="center"
                                 android:gravity="center"/>
+
                             <TextView
+                                android:id="@+id/DeliveryCartPrice"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="0"
-                                android:textSize="16sp"
-                                android:textColor="@color/SecondTextColor"
-                                android:fontFamily="@font/poppins_medium"
                                 android:layout_gravity="center"
-                                android:gravity="center"/>
+                                android:fontFamily="@font/poppins_medium"
+                                android:gravity="center"
+                                android:text="0"
+                                android:textColor="@color/SecondTextColor"
+                                android:textSize="16sp" />
                         </LinearLayout>
 
                     </LinearLayout>
@@ -673,6 +371,7 @@
                                 android:layout_gravity="center"
                                 android:gravity="center"/>
                             <TextView
+                                android:id="@+id/TotleCartPrice"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="18.500"

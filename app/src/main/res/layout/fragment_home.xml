@@ -3,17 +3,18 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     tools:context=".Fragments.HomeFragment"
 >
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
             <LinearLayout
+                android:id="@+id/line1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
@@ -63,13 +64,17 @@
 
             </LinearLayout>
             <com.google.android.material.card.MaterialCardView
+                android:id="@+id/line2"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 app:cardBackgroundColor="@color/ThirdColor"
                 app:cardCornerRadius="10dp"
                 android:layout_marginTop="20dp"
                 android:layout_marginStart="25dp"
-                android:layout_marginEnd="25dp">
+                android:layout_marginEnd="25dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/line1">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -104,12 +109,19 @@
                 android:id="@+id/AnnonceRecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"/>
+                android:layout_marginTop="20dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/line2"/>
             <HorizontalScrollView
+                android:id="@+id/line3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginTop="30dp">
+                android:layout_marginTop="30dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/AnnonceRecyclerView">
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -280,8 +292,12 @@
                 android:id="@+id/ProductRecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"/>
+                android:layout_marginTop="10dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/line3"/>
             <TextView
+                android:id="@+id/line4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Popular Meal Menu"
@@ -291,12 +307,20 @@
                 android:textAlignment="textStart"
                 android:gravity="center|start"
                 android:layout_marginTop="20dp"
-                android:layout_marginStart="10sp"/>
+                android:layout_marginStart="10sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/ProductRecyclerView"/>
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/AllProductRecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"/>
-        </LinearLayout>
+                android:layout_marginTop="10dp"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/line4"
+                app:layout_constraintBottom_toBottomOf="parent"
+                />
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 </FrameLayout>

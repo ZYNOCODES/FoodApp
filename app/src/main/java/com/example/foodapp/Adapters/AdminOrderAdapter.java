@@ -1,6 +1,7 @@
 package com.example.foodapp.Adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,6 +9,8 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.foodapp.AdminConfirmeOrderActivity;
+import com.example.foodapp.DisplayOrderActivity;
 import com.example.foodapp.Models.Order;
 import com.example.foodapp.R;
 import com.example.foodapp.ViewHolders.AdminOrderViewHolder;
@@ -39,6 +42,9 @@ public class AdminOrderAdapter extends RecyclerView.Adapter<AdminOrderViewHolder
             @Override
             public void onClick(View view) {
                 //redirect to order details
+                Intent i = new Intent(context, AdminConfirmeOrderActivity.class);
+                i.putExtra("OrderID",orders.get(position).getID());
+                context.startActivity(i);
             }
         });
     }

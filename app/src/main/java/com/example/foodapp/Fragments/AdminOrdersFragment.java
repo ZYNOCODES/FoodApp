@@ -2,21 +2,29 @@ package com.example.foodapp.Fragments;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.foodapp.Adapters.AdminOrderAdapter;
 import com.example.foodapp.Adapters.OrderAdapter;
 import com.example.foodapp.Models.Order;
 import com.example.foodapp.R;
 import com.google.android.material.card.MaterialCardView;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
@@ -24,10 +32,11 @@ public class AdminOrdersFragment extends Fragment {
     private View view;
     private MaterialCardView ConfirmedBTN, NewBTN;
     private TextView ConfirmedTextView, NewTextView;
-    private RecyclerView MyAdminNewOrdersRecyclerView,MyAdminConfirmedOrdersRecyclerView;
-    private ArrayList<Order> NewOrder,ConfirmedOrder;
+    private RecyclerView MyAdminNewOrdersRecyclerView, MyAdminConfirmedOrdersRecyclerView;
     private AdminOrderAdapter adminOrderAdapter;
     private OrderAdapter orderAdapter;
+    private DatabaseReference RefOrder;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -37,46 +46,19 @@ public class AdminOrdersFragment extends Fragment {
         InisializationOfFealds();
         ButtonRedirection();
 
-        //New orders recycler view
-        NewOrder = new ArrayList<>();
-        NewOrder.add(new Order("34f51f5f4sddsf","a domicile","350",false));
-        NewOrder.add(new Order("45231f5f4s54sf","a domicile","600",false));
-        NewOrder.add(new Order("78971f5f4s7d6f","Livraison","850",false));
-        NewOrder.add(new Order("24351f5f4sdds5","Livraison","750",false));
-        NewOrder.add(new Order("57851f5f4sdds8","Livraison","1200",false));
-        NewOrder.add(new Order("gdv51f5f4sdd47","Livraison","250",false));
-        NewOrder.add(new Order("27d51f5f4sddcb","a domicile","250",false));
-        NewOrder.add(new Order("99f51f5f4sddbb","a domicile","250",false));
-        NewOrder.add(new Order("7yf51f5f4sddaw","a domicile","300",false));
-        NewOrder.add(new Order("d8f51f5f4spert","Livraison","300",false));
-
-        adminOrderAdapter = new AdminOrderAdapter(getActivity(),NewOrder);
-        MyAdminNewOrdersRecyclerView.setAdapter(adminOrderAdapter);
-
-        LinearLayoutManager Newmanager = new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false);
+        //recycler view
+        LinearLayoutManager Newmanager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         MyAdminNewOrdersRecyclerView.setLayoutManager(Newmanager);
-
-        //Confirmed orders recycler view
-        ConfirmedOrder = new ArrayList<>();
-        ConfirmedOrder.add(new Order("34f51f5f4sddsf","a domicile","350",true));
-        ConfirmedOrder.add(new Order("45231f5f4s54sf","a domicile","600",true));
-        ConfirmedOrder.add(new Order("78971f5f4s7d6f","Livraison","850",true));
-        ConfirmedOrder.add(new Order("24351f5f4sdds5","Livraison","750",true));
-        ConfirmedOrder.add(new Order("57851f5f4sdds8","Livraison","1200",true));
-        ConfirmedOrder.add(new Order("gdv51f5f4sdd47","Livraison","250",true));
-        ConfirmedOrder.add(new Order("27d51f5f4sddcb","a domicile","250",true));
-        ConfirmedOrder.add(new Order("99f51f5f4sddbb","a domicile","250",true));
-        ConfirmedOrder.add(new Order("7yf51f5f4sddaw","a domicile","300",true));
-        ConfirmedOrder.add(new Order("d8f51f5f4spert","Livraison","300",true));
-
-        orderAdapter = new OrderAdapter(getActivity(),ConfirmedOrder);
-        MyAdminConfirmedOrdersRecyclerView.setAdapter(orderAdapter);
-
-        LinearLayoutManager Confirmedmanager = new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false);
+        LinearLayoutManager Confirmedmanager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         MyAdminConfirmedOrdersRecyclerView.setLayoutManager(Confirmedmanager);
+
+        //fetch data
+        fetchDataFromDB();
+
         return view;
     }
-    private void InisializationOfFealds(){
+
+    private void InisializationOfFealds() {
         ConfirmedBTN = view.findViewById(R.id.ConfirmedBTN);
         NewBTN = view.findViewById(R.id.NewBTN);
         ConfirmedTextView = view.findViewById(R.id.ConfirmedTextView);
@@ -96,8 +78,12 @@ public class AdminOrdersFragment extends Fragment {
         //visibility
         MyAdminConfirmedOrdersRecyclerView.setVisibility(View.GONE);
         MyAdminNewOrdersRecyclerView.setVisibility(View.VISIBLE);
+        RefOrder = FirebaseDatabase.getInstance(getString(R.string.DBURL))
+                .getReference()
+                .child("Orders");
     }
-    private void ButtonRedirection(){
+
+    private void ButtonRedirection() {
         ConfirmedBTN.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -134,5 +120,36 @@ public class AdminOrdersFragment extends Fragment {
                 MyAdminNewOrdersRecyclerView.setVisibility(View.VISIBLE);
             }
         });
+    }
+
+    private void fetchDataFromDB() {
+        ArrayList<Order> NewOrder = new ArrayList<>();
+        ArrayList<Order> ConfirmedOrder = new ArrayList<>();
+        RefOrder.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                NewOrder.clear();
+                ConfirmedOrder.clear();
+                for (DataSnapshot oneSnapshot : snapshot.getChildren()) {
+                    Order order = oneSnapshot.getValue(Order.class);
+                    if (order != null && order.getConfirmation()) {
+                        ConfirmedOrder.add(order);
+                    } else {
+                        NewOrder.add(order);
+                    }
+                }
+                adminOrderAdapter = new AdminOrderAdapter(getActivity(), NewOrder);
+                MyAdminNewOrdersRecyclerView.setAdapter(adminOrderAdapter);
+                orderAdapter = new OrderAdapter(getActivity(), ConfirmedOrder);
+                MyAdminConfirmedOrdersRecyclerView.setAdapter(orderAdapter);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e("DatabaseError", "Operation canceled", error.toException());
+                Toast.makeText(getActivity(), "Database operation canceled: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+
     }
 }

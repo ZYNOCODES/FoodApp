@@ -28,7 +28,6 @@ import java.util.ArrayList;
 
 public class MyOrdersFragment extends Fragment {
     private View view;
-    private ArrayList<Order> order;
     private OrderAdapter orderAdapter;
     private RecyclerView MyOrdersRecyclerView;
     private ArrayList<Order> orders;
