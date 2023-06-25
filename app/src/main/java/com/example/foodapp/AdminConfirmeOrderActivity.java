@@ -24,6 +24,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.card.MaterialCardView;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -35,7 +36,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class AdminConfirmeOrderActivity extends AppCompatActivity {
-    private DatabaseReference RefOrder;
+    private DatabaseReference RefOrder, RefOrderConfirmation;
     private MyOrderAdapter myOrderAdapter;
     private RecyclerView CartRecyclerView;
     private TextView DeliveryCartPrice, TotleCartPrice, TotleItemsPrice, LocationOutPut, DeleveryNotesOutPut;
@@ -45,6 +46,7 @@ public class AdminConfirmeOrderActivity extends AppCompatActivity {
     private MaterialCardView AnnulationBTN, ConfirmationBTN;
     private Dialog dialog;
     private Order order;
+    private FirebaseAuth Auth;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,10 +79,16 @@ public class AdminConfirmeOrderActivity extends AppCompatActivity {
         ConfirmationBTN = findViewById(R.id.ConfirmationBTN);
         AnnulationBTN = findViewById(R.id.AnnulationBTN);
         OrderID = getIntent().getStringExtra("OrderID");
+        Auth = FirebaseAuth.getInstance();
         RefOrder = FirebaseDatabase.getInstance(getString(R.string.DBURL))
                 .getReference()
                 .child("Orders")
                 .child(OrderID);
+        RefOrderConfirmation = FirebaseDatabase.getInstance(getString(R.string.DBURL))
+                .getReference()
+                .child("Users")
+                .child(Auth.getCurrentUser().getUid())
+                .child("Orders");
     }
     private void ButtonsRediraction(){
         CancelBTN.setOnClickListener(new View.OnClickListener() {
@@ -118,7 +126,35 @@ public class AdminConfirmeOrderActivity extends AppCompatActivity {
         AnnulationBTN.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                AlertDialog.Builder mydialog = new AlertDialog.Builder(AdminConfirmeOrderActivity.this);
+                mydialog.setTitle("Delete "+order.getID());
+                mydialog.setMessage("Do you really want to delete "
+                        +order.getID()+" ?");
+                mydialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        // deleting the product
+                        RefOrder.removeValue()
+                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        if(task.isSuccessful()){
+                                            onBackPressed();
+                                            Toast.makeText(AdminConfirmeOrderActivity.this, "Order deleted", Toast.LENGTH_SHORT).show();
+                                        }else{
+                                            Toast.makeText(AdminConfirmeOrderActivity.this, "Error , check your internet connexion", Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                });
+                    }
+                });
+                mydialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                });
+                mydialog.show();
             }
         });
     }
@@ -161,9 +197,25 @@ public class AdminConfirmeOrderActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()){
-                            dialog.dismiss();
-                            onBackPressed();
-                            Toast.makeText(AdminConfirmeOrderActivity.this, "Order Confirmed", Toast.LENGTH_SHORT).show();
+                            RefOrderConfirmation = FirebaseDatabase.getInstance(getString(R.string.DBURL))
+                                    .getReference()
+                                    .child("Users")
+                                    .child(Auth.getCurrentUser().getUid())
+                                    .child("Orders");
+                            RefOrderConfirmation.child(order.getID()).setValue(order)
+                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            if (task.isSuccessful()){
+                                                dialog.dismiss();
+                                                onBackPressed();
+                                                Toast.makeText(AdminConfirmeOrderActivity.this, "Order Confirmed", Toast.LENGTH_SHORT).show();
+                                            }else {
+                                                dialog.dismiss();
+                                                Toast.makeText(AdminConfirmeOrderActivity.this, task.getException().toString(), Toast.LENGTH_SHORT).show();
+                                            }
+                                        }
+                                    });
                         }else {
                             dialog.dismiss();
                             Toast.makeText(AdminConfirmeOrderActivity.this, task.getException().toString(), Toast.LENGTH_SHORT).show();

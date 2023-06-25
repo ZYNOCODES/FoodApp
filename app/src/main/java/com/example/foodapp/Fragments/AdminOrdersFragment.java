@@ -20,6 +20,7 @@ import com.example.foodapp.Adapters.OrderAdapter;
 import com.example.foodapp.Models.Order;
 import com.example.foodapp.R;
 import com.google.android.material.card.MaterialCardView;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -35,7 +36,8 @@ public class AdminOrdersFragment extends Fragment {
     private RecyclerView MyAdminNewOrdersRecyclerView, MyAdminConfirmedOrdersRecyclerView;
     private AdminOrderAdapter adminOrderAdapter;
     private OrderAdapter orderAdapter;
-    private DatabaseReference RefOrder;
+    private DatabaseReference RefOrder, RefOrderConfirmed;
+    private FirebaseAuth Auth;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -78,8 +80,14 @@ public class AdminOrdersFragment extends Fragment {
         //visibility
         MyAdminConfirmedOrdersRecyclerView.setVisibility(View.GONE);
         MyAdminNewOrdersRecyclerView.setVisibility(View.VISIBLE);
+        Auth = FirebaseAuth.getInstance();
         RefOrder = FirebaseDatabase.getInstance(getString(R.string.DBURL))
                 .getReference()
+                .child("Orders");
+        RefOrderConfirmed = FirebaseDatabase.getInstance(getString(R.string.DBURL))
+                .getReference()
+                .child("Users")
+                .child(Auth.getCurrentUser().getUid())
                 .child("Orders");
     }
 
@@ -124,22 +132,37 @@ public class AdminOrdersFragment extends Fragment {
 
     private void fetchDataFromDB() {
         ArrayList<Order> NewOrder = new ArrayList<>();
-        ArrayList<Order> ConfirmedOrder = new ArrayList<>();
         RefOrder.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 NewOrder.clear();
-                ConfirmedOrder.clear();
                 for (DataSnapshot oneSnapshot : snapshot.getChildren()) {
                     Order order = oneSnapshot.getValue(Order.class);
-                    if (order != null && order.getConfirmation()) {
-                        ConfirmedOrder.add(order);
-                    } else {
+                    if (order != null && !order.getConfirmation()) {
                         NewOrder.add(order);
                     }
                 }
                 adminOrderAdapter = new AdminOrderAdapter(getActivity(), NewOrder);
                 MyAdminNewOrdersRecyclerView.setAdapter(adminOrderAdapter);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e("DatabaseError", "Operation canceled", error.toException());
+                Toast.makeText(getActivity(), "Database operation canceled: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+        ArrayList<Order> ConfirmedOrder = new ArrayList<>();
+        RefOrderConfirmed.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                ConfirmedOrder.clear();
+                for (DataSnapshot oneSnapshot : snapshot.getChildren()) {
+                    Order order = oneSnapshot.getValue(Order.class);
+                    if (order != null && order.getConfirmation()) {
+                        ConfirmedOrder.add(order);
+                    }
+                }
                 orderAdapter = new OrderAdapter(getActivity(), ConfirmedOrder);
                 MyAdminConfirmedOrdersRecyclerView.setAdapter(orderAdapter);
             }
@@ -150,6 +173,5 @@ public class AdminOrdersFragment extends Fragment {
                 Toast.makeText(getActivity(), "Database operation canceled: " + error.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
-
     }
 }

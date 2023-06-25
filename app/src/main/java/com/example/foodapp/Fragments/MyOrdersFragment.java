@@ -18,6 +18,7 @@ import com.example.foodapp.Adapters.OrderAdapter;
 import com.example.foodapp.Models.Cart;
 import com.example.foodapp.Models.Order;
 import com.example.foodapp.R;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -32,6 +33,7 @@ public class MyOrdersFragment extends Fragment {
     private RecyclerView MyOrdersRecyclerView;
     private ArrayList<Order> orders;
     private DatabaseReference RefOrder;
+    private FirebaseAuth Auth;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -50,6 +52,7 @@ public class MyOrdersFragment extends Fragment {
     }
     private void InisializationOfFealds(){
         MyOrdersRecyclerView = view.findViewById(R.id.MyOrdersRecyclerView);
+        Auth = FirebaseAuth.getInstance();
         RefOrder = FirebaseDatabase.getInstance(getString(R.string.DBURL))
                 .getReference()
                 .child("Orders");
@@ -62,7 +65,9 @@ public class MyOrdersFragment extends Fragment {
                 orders.clear();
                 for (DataSnapshot oneSnapshot : snapshot.getChildren()){
                     Order order = oneSnapshot.getValue(Order.class);
-                    orders.add(order);
+                    if (order != null && order.getClientID().equals(Auth.getCurrentUser().getUid())) {
+                        orders.add(order);
+                    }
                 }
                 orderAdapter = new OrderAdapter(getActivity(),orders);
                 MyOrdersRecyclerView.setAdapter(orderAdapter);
