@@ -87,7 +87,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Full name"
+                            android:text="Nom complet"
                             android:textSize="14sp"
                             android:textAlignment="textStart"
                             android:textColor="@color/Gray"
@@ -111,7 +111,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Phone"
+                            android:text="Numero de telephone"
                             android:textSize="14sp"
                             android:textAlignment="textStart"
                             android:textColor="@color/Gray"
@@ -135,7 +135,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Deliver to"
+                            android:text="Livrer à"
                             android:textSize="14sp"
                             android:textAlignment="textStart"
                             android:textColor="@color/Gray"
@@ -169,7 +169,7 @@
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:hint="Add a note of delivery address"
+                                android:hint="Ajouter une note d'adresse de livraison"
                                 android:textColor="@color/SecondTextColor"
                                 android:textSize="14sp"
                                 android:fontFamily="@font/poppins_regular"

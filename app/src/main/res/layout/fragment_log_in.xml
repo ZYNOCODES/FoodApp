@@ -47,13 +47,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:fontFamily="@font/lora_italic"
+                android:fontFamily="@font/poppins_regular"
                 android:gravity="center"
-                android:text="Log in to your account"
+                android:text="Connectez-vous à votre compte"
                 android:textAlignment="center"
                 android:textColor="@color/PrimaryTextColor"
                 android:textSize="20sp"
-                android:layout_marginTop="30dp"
+                android:layout_marginTop="20dp"
                 app:layout_constraintTop_toBottomOf="@+id/line1"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"/>
@@ -142,9 +142,10 @@
                         android:background="@color/Transparent"
                         android:fontFamily="@font/poppins_regular"
                         android:gravity="center|start"
-                        android:hint="Password"
+                        android:hint="Mot de passe"
                         android:paddingStart="5dp"
-                        android:textColor="@color/PrimaryTextColor" />
+                        android:textColor="@color/PrimaryTextColor"
+                        android:inputType="textPassword"/>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
             <com.google.android.material.card.MaterialCardView
@@ -167,7 +168,7 @@
                     android:layout_gravity="center"
                     android:fontFamily="@font/poppins_medium"
                     android:gravity="center"
-                    android:text="Sign in"
+                    android:text="S'identifier"
                     android:textAlignment="center"
                     android:textColor="@color/white"
                     android:textSize="16sp" />
@@ -200,7 +201,7 @@
                     android:layout_marginStart="10dp"
                     android:layout_marginEnd="10dp"
                     android:fontFamily="@font/poppins_medium"
-                    android:text="Or continue with"
+                    android:text="Ou continuer avec"
                     android:textAlignment="center"
                     android:textColor="@color/PrimaryTextColor"
                     android:textSize="16sp" />
@@ -273,7 +274,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/poppins_regular"
-                    android:text="Don’t have an account?"
+                    android:text="Vous n'avez pas de compte?"
                     android:textAlignment="center"
                     android:textColor="@color/Gray"
                     android:textSize="16sp" />
@@ -284,7 +285,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="5dp"
                     android:fontFamily="@font/poppins_medium"
-                    android:text="Sign up"
+                    android:text="S'inscrire"
                     android:textAlignment="center"
                     android:textColor="@color/PrimaryTextColor"
                     android:textSize="16sp" />

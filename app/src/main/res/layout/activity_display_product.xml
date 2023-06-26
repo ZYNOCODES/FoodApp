@@ -106,7 +106,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="20sp"
                     android:fontFamily="@font/poppins_medium"
-                    android:text="About"
+                    android:text="À propos"
                     android:textAlignment="center"
                     android:textColor="@color/PrimaryTextColor"
                     android:textSize="16sp" />
@@ -137,7 +137,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="20sp"
                     android:fontFamily="@font/poppins_medium"
-                    android:text="Modification"
+                    android:text="Modifications"
                     android:textAlignment="center"
                     android:textColor="@color/PrimaryTextColor"
                     android:textSize="16sp" />
@@ -162,7 +162,7 @@
                     android:layout_marginStart="20sp"
                     android:layout_marginTop="10dp"
                     android:fontFamily="@font/poppins_medium"
-                    android:text="Quantity"
+                    android:text="Quantité"
                     android:textAlignment="center"
                     android:textColor="@color/PrimaryTextColor"
                     android:textSize="16sp" />
@@ -250,7 +250,7 @@
                             android:layout_marginEnd="20sp"
                             android:fontFamily="@font/poppins_medium"
                             android:gravity="center"
-                            android:text="Add to cart"
+                            android:text="Ajouter au panier"
                             android:textAlignment="center"
                             android:textColor="@color/white"
                             android:textSize="14sp" />

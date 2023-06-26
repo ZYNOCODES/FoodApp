@@ -39,20 +39,10 @@
                     android:layout_marginBottom="5dp"
                     android:fontFamily="@font/poppins_medium"
                     android:gravity="start|bottom"
-                    android:text="Order N "
+                    android:text="Commande"
                     android:textColor="@color/SecondTextColor"
                     android:textSize="24sp" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="start|bottom"
-                    android:layout_marginBottom="5dp"
-                    android:fontFamily="@font/poppins_medium"
-                    android:gravity="start|bottom"
-                    android:text="1545315651"
-                    android:textColor="@color/SecondTextColor"
-                    android:textSize="20sp" />
             </LinearLayout>
 
             <ImageView
@@ -96,7 +86,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/poppins_medium"
-                        android:text="Full name"
+                        android:text="Nom complet"
                         android:textAlignment="textStart"
                         android:textColor="@color/Gray"
                         android:textSize="14sp" />
@@ -106,7 +96,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/poppins_regular"
-                        android:text="Boumrar Zine Eddine"
+                        android:text="full name"
                         android:textAlignment="textStart"
                         android:textColor="@color/SecondTextColor"
                         android:textSize="16sp" />
@@ -124,7 +114,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/poppins_medium"
-                        android:text="Phone"
+                        android:text="Numero de telephone"
                         android:textAlignment="textStart"
                         android:textColor="@color/Gray"
                         android:textSize="14sp" />
@@ -153,7 +143,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/poppins_medium"
-                        android:text="Deliver to"
+                        android:text="Livrer à"
                         android:textAlignment="textStart"
                         android:textColor="@color/Gray"
                         android:textSize="14sp" />
@@ -196,7 +186,7 @@
                                 android:background="@color/Transparent"
                                 android:fontFamily="@font/poppins_regular"
                                 android:gravity="center|start"
-                                android:hint="Add a note of delivery address"
+                                android:hint="Ajouter une note d'adresse de livraison"
                                 android:textColor="@color/SecondTextColor"
                                 android:textSize="14sp" />
                         </LinearLayout>
@@ -246,7 +236,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:fontFamily="@font/poppins_medium"
-                        android:text="My Bucket"
+                        android:text="Détails"
                         android:textColor="@color/SecondTextColor"
                         android:textSize="22sp" />
                 </LinearLayout>
@@ -291,7 +281,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:fontFamily="@font/poppins_medium"
-                    android:text="Payment"
+                    android:text="Paiement"
                     android:textColor="@color/SecondTextColor"
                     android:textSize="22sp" />
 
@@ -308,7 +298,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:fontFamily="@font/poppins_regular"
-                        android:text="Item total"
+                        android:text="Total des articles"
                         android:textColor="@color/SecondTextColor"
                         android:textSize="16sp" />
 
@@ -356,7 +346,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:fontFamily="@font/poppins_regular"
-                        android:text="Delivery fee"
+                        android:text="Frais de livraison"
                         android:textColor="@color/SecondTextColor"
                         android:textSize="16sp" />
 
@@ -410,7 +400,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:fontFamily="@font/poppins_medium"
-                        android:text="To Pay"
+                        android:text="Payer"
                         android:textColor="@color/PrimaryTextColor"
                         android:textSize="16sp" />
 

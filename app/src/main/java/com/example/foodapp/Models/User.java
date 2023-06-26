@@ -4,6 +4,14 @@ public class User {
     private String Email;
     private String FullName;
     private String Phone;
+    private int IMG;
+
+    public User(String email, String fullName, String phone, int IMG) {
+        Email = email;
+        FullName = fullName;
+        Phone = phone;
+        this.IMG = IMG;
+    }
 
     public User(String email, String fullName, String phone) {
         Email = email;
@@ -36,5 +44,13 @@ public class User {
 
     public void setPhone(String phone) {
         Phone = phone;
+    }
+
+    public int getIMG() {
+        return IMG;
+    }
+
+    public void setIMG(int IMG) {
+        this.IMG = IMG;
     }
 }

@@ -31,6 +31,7 @@ import com.example.foodapp.MainActivity;
 import com.example.foodapp.Models.Cart;
 import com.example.foodapp.Models.Order;
 import com.example.foodapp.Models.Product;
+import com.example.foodapp.Models.User;
 import com.example.foodapp.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -48,12 +49,12 @@ public class CartFragment extends Fragment {
     private View view;
     private MaterialCardView DeleveryNotes, PlaceMYOrderBTN;
     private CheckBox DeleveryCheckBox;
-    private DatabaseReference RefCart,RefOrder;
+    private DatabaseReference RefCart, RefOrder, Refuser;
     private FirebaseAuth Auth;
     private CartAdapter cartAdapter;
     private RecyclerView CartRecyclerView;
     private LinearLayout AddToCartBTN;
-    private TextView DeliveryCartPrice, TotleCartPrice, TotleItemsPrice, LocationOutPut;
+    private TextView DeliveryCartPrice, TotleCartPrice, TotleItemsPrice, LocationOutPut, ClientPhoneNumber, ClientFullName;
     private ArrayList<Cart> products;
     private IconColorChangeListener iconColorChangeListener;
     private Dialog dialog;
@@ -70,6 +71,7 @@ public class CartFragment extends Fragment {
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.dialog_wait1);
         dialog.setCanceledOnTouchOutside(false);
+
 
         //recycler view
         LinearLayoutManager manager = new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false);
@@ -104,6 +106,8 @@ public class CartFragment extends Fragment {
         TotleItemsPrice = view.findViewById(R.id.TotleItemsPrice);
         LocationOutPut = view.findViewById(R.id.LocationOutPut);
         DeleveryNotesInPut = view.findViewById(R.id.DeleveryNotesInPut);
+        ClientPhoneNumber = view.findViewById(R.id.ClientPhoneNumber);
+        ClientFullName = view.findViewById(R.id.ClientFullName);
         Auth = FirebaseAuth.getInstance();
         RefCart = FirebaseDatabase.getInstance(getString(R.string.DBURL))
                 .getReference()
@@ -113,6 +117,10 @@ public class CartFragment extends Fragment {
         RefOrder = FirebaseDatabase.getInstance(getString(R.string.DBURL))
                 .getReference()
                 .child("Orders");
+        Refuser = FirebaseDatabase.getInstance(getString(R.string.DBURL))
+                .getReference()
+                .child("Users")
+                .child(Auth.getCurrentUser().getUid());
     }
     private void ButtonRedirection(){
         DeleveryCheckBox.setOnClickListener(new View.OnClickListener() {
@@ -177,6 +185,25 @@ public class CartFragment extends Fragment {
                 TotleCartPrice.setText(String.valueOf(totalItem[0]+DeliveryPrice));
                 cartAdapter = new CartAdapter(getActivity(), products);
                 CartRecyclerView.setAdapter(cartAdapter);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e("DatabaseError", "Operation canceled", error.toException());
+                Toast.makeText(getActivity(), "Database operation canceled: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        Refuser.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                User user = snapshot.getValue(User.class);
+                if (user != null) {
+                    if (user.getPhone() != null && user.getFullName() != null){
+                        ClientPhoneNumber.setText(String.valueOf(user.getPhone()));
+                        ClientFullName.setText(String.valueOf(user.getFullName()));
+                    }
+                }
             }
 
             @Override

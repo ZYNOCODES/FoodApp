@@ -14,7 +14,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/poppins_medium"
-            android:text="Les orders d'aujourd'hui"
+            android:text="Les commandes d'aujourd'hui"
             android:textAlignment="center"
             android:textColor="@color/PrimaryTextColor"
             android:textSize="16sp"
@@ -58,7 +58,7 @@
                     android:background="@color/Transparent"
                     android:fontFamily="@font/poppins_regular"
                     android:gravity="center|start"
-                    android:hint="search"
+                    android:hint="recherche"
                     android:paddingStart="5dp"
                     android:textColor="@color/Lowblack" />
             </LinearLayout>

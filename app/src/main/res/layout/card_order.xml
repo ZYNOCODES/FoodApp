@@ -33,13 +33,13 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
+                android:orientation="vertical"
                 android:layout_gravity="center|start"
                 android:gravity="start|center">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Order ID :"
+                    android:text="Commande ID :"
                     android:textColor="@color/PrimaryTextColor"
                     android:textAlignment="textStart"
                     android:textSize="18sp"
@@ -52,8 +52,7 @@
                     android:textColor="@color/PrimaryTextColor"
                     android:textAlignment="textStart"
                     android:textSize="15sp"
-                    android:fontFamily="@font/poppins_regular"
-                    android:layout_marginStart="5dp"/>
+                    android:fontFamily="@font/poppins_regular" />
             </LinearLayout>
             <LinearLayout
                 android:layout_width="wrap_content"

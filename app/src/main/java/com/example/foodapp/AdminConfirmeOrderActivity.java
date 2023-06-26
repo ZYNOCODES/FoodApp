@@ -20,6 +20,7 @@ import android.widget.Toast;
 
 import com.example.foodapp.Adapters.MyOrderAdapter;
 import com.example.foodapp.Models.Order;
+import com.example.foodapp.Models.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -36,10 +37,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class AdminConfirmeOrderActivity extends AppCompatActivity {
-    private DatabaseReference RefOrder, RefOrderConfirmation;
+    private DatabaseReference RefOrder, RefOrderConfirmation, Refuser;
     private MyOrderAdapter myOrderAdapter;
     private RecyclerView CartRecyclerView;
-    private TextView DeliveryCartPrice, TotleCartPrice, TotleItemsPrice, LocationOutPut, DeleveryNotesOutPut;
+    private TextView DeliveryCartPrice, TotleCartPrice, TotleItemsPrice, LocationOutPut, DeleveryNotesOutPut, ClientPhoneNumber, ClientFullName;
     private String OrderID;
     private ImageView CancelBTN;
     private LinearLayout DeleveryCard;
@@ -78,6 +79,8 @@ public class AdminConfirmeOrderActivity extends AppCompatActivity {
         DeleveryCard = findViewById(R.id.DeleveryCard);
         ConfirmationBTN = findViewById(R.id.ConfirmationBTN);
         AnnulationBTN = findViewById(R.id.AnnulationBTN);
+        ClientPhoneNumber = findViewById(R.id.ClientPhoneNumber);
+        ClientFullName = findViewById(R.id.ClientFullName);
         OrderID = getIntent().getStringExtra("OrderID");
         Auth = FirebaseAuth.getInstance();
         RefOrder = FirebaseDatabase.getInstance(getString(R.string.DBURL))
@@ -89,6 +92,7 @@ public class AdminConfirmeOrderActivity extends AppCompatActivity {
                 .child("Users")
                 .child(Auth.getCurrentUser().getUid())
                 .child("Orders");
+
     }
     private void ButtonsRediraction(){
         CancelBTN.setOnClickListener(new View.OnClickListener() {
@@ -180,6 +184,28 @@ public class AdminConfirmeOrderActivity extends AppCompatActivity {
                     }
                     myOrderAdapter = new MyOrderAdapter(AdminConfirmeOrderActivity.this,order.getProducts());
                     CartRecyclerView.setAdapter(myOrderAdapter);
+                    Refuser = FirebaseDatabase.getInstance(getString(R.string.DBURL))
+                            .getReference()
+                            .child("Users")
+                            .child(order.getClientID());
+                    Refuser.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            User user = snapshot.getValue(User.class);
+                            if (user != null) {
+                                if (user.getPhone() != null && user.getFullName() != null){
+                                    ClientPhoneNumber.setText(String.valueOf(user.getPhone()));
+                                    ClientFullName.setText(String.valueOf(user.getFullName()));
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+                            Log.e("DatabaseError", "Operation canceled", error.toException());
+                            Toast.makeText(AdminConfirmeOrderActivity.this, "Database operation canceled: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    });
                 }
 
 
@@ -190,6 +216,7 @@ public class AdminConfirmeOrderActivity extends AppCompatActivity {
                 Toast.makeText(AdminConfirmeOrderActivity.this, "Database operation canceled: " + error.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+
     }
     protected void updateOrderIntoDB(Map<String, Object> product){
         RefOrder.updateChildren(product)

@@ -61,7 +61,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="184dp"
             android:fontFamily="@font/poppins_bold"
-            android:text="Thank You!\nOrder Completed"
+            android:text="Merci!\nCommande terminée"
             android:textAlignment="center"
             android:textColor="@color/SecondTextColor"
             android:textSize="25sp"
@@ -70,18 +70,6 @@
             app:layout_constraintHorizontal_bias="0.497"
             app:layout_constraintStart_toStartOf="parent" />
 
-        <TextView
-            android:id="@+id/textView2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/poppins_medium"
-            android:text="Please rate your last Driver"
-            android:textAlignment="center"
-            android:textColor="@color/Gray"
-            android:textSize="14sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView" />
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/materialCardView"
@@ -101,7 +89,7 @@
                 android:layout_gravity="center"
                 android:fontFamily="@font/poppins_medium"
                 android:gravity="center"
-                android:text="My orders"
+                android:text="Mes commandes"
                 android:textAlignment="center"
                 android:textColor="@color/white"
                 android:textSize="16sp" />

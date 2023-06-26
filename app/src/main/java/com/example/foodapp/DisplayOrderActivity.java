@@ -23,6 +23,7 @@ import com.example.foodapp.Adapters.OrderAdapter;
 import com.example.foodapp.Models.Cart;
 import com.example.foodapp.Models.Order;
 import com.example.foodapp.Models.Product;
+import com.example.foodapp.Models.User;
 import com.google.android.material.card.MaterialCardView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -35,13 +36,14 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 
 public class DisplayOrderActivity extends AppCompatActivity {
-    private DatabaseReference RefOrder;
+    private DatabaseReference RefOrder, Refuser;
     private MyOrderAdapter myOrderAdapter;
     private RecyclerView CartRecyclerView;
-    private TextView DeliveryCartPrice, TotleCartPrice, TotleItemsPrice, LocationOutPut, DeleveryNotesOutPut;
+    private TextView DeliveryCartPrice, TotleCartPrice, TotleItemsPrice, LocationOutPut, DeleveryNotesOutPut, ClientPhoneNumber, ClientFullName;
     private String OrderID;
     private ImageView CancelBTN;
     private LinearLayout DeleveryCard;
+    private Order order;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,6 +71,8 @@ public class DisplayOrderActivity extends AppCompatActivity {
         LocationOutPut = findViewById(R.id.LocationOutPut);
         DeleveryNotesOutPut = findViewById(R.id.DeleveryNotesOutPut);
         DeleveryCard = findViewById(R.id.DeleveryCard);
+        ClientPhoneNumber = findViewById(R.id.ClientPhoneNumber);
+        ClientFullName = findViewById(R.id.ClientFullName);
         OrderID = getIntent().getStringExtra("OrderID");
         RefOrder = FirebaseDatabase.getInstance(getString(R.string.DBURL))
                 .getReference()
@@ -87,7 +91,7 @@ public class DisplayOrderActivity extends AppCompatActivity {
         RefOrder.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                Order order = snapshot.getValue(Order.class);
+                order = snapshot.getValue(Order.class);
                 final int[] totalItem = {0};
                 if (order != null) {
                     TotleCartPrice.setText(String.valueOf(order.getPrice()));
@@ -105,6 +109,28 @@ public class DisplayOrderActivity extends AppCompatActivity {
                     }
                     myOrderAdapter = new MyOrderAdapter(DisplayOrderActivity.this,order.getProducts());
                     CartRecyclerView.setAdapter(myOrderAdapter);
+                    Refuser = FirebaseDatabase.getInstance(getString(R.string.DBURL))
+                            .getReference()
+                            .child("Users")
+                            .child(order.getClientID());
+                    Refuser.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            User user = snapshot.getValue(User.class);
+                            if (user != null) {
+                                if (user.getPhone() != null && user.getFullName() != null){
+                                    ClientPhoneNumber.setText(user.getPhone().toString());
+                                    ClientFullName.setText(user.getFullName().toString());
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+                            Log.e("DatabaseError", "Operation canceled", error.toException());
+                            Toast.makeText(DisplayOrderActivity.this, "Database operation canceled: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    });
                 }
 
 
@@ -115,5 +141,6 @@ public class DisplayOrderActivity extends AppCompatActivity {
                 Toast.makeText(DisplayOrderActivity.this, "Database operation canceled: " + error.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+
     }
 }

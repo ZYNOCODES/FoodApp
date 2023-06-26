@@ -21,15 +21,15 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Your order is confirmed!"
-            android:textSize="24sp"
+            android:text="Votre commande est confirmée !"
+            android:textSize="20sp"
             android:textColor="@color/SecondTextColor"
             android:fontFamily="@font/poppins_medium"
             android:layout_marginTop="40dp"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="we'll deliver your order immediately, \nmake sure your order put on the doorstep"
+            android:text="nous livrerons votre commande immédiatement,\nassurez-vous que votre commande\nsoit déposée à la porte"
             android:textColor="@color/Gray"
             android:textSize="12sp"
             android:textAlignment="center"
@@ -46,7 +46,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Check order status"
+                android:text="Vérifier la commande"
                 android:textAlignment="center"
                 android:textSize="16sp"
                 android:textColor="@color/white"
