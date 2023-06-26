@@ -38,12 +38,14 @@
                         app:cardElevation="0dp"
                         android:elevation="10dp"
                         android:layout_gravity="center"
-                        android:layout_marginTop="40dp">
+                        android:layout_marginTop="40dp"
+                        app:strokeColor="@color/Gray"
+                        app:strokeWidth="5dp">
                         <ImageView
                             android:id="@+id/ProfileIMGOutPut"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:src="@drawable/cv"
+                            android:src="@drawable/profil"
                             android:scaleType="centerCrop"
                             android:layout_gravity="center"/>
                     </com.google.android.material.card.MaterialCardView>

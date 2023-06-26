@@ -1,5 +1,6 @@
 package com.example.foodapp.Fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -17,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.foodapp.Adapters.MyOrderAdapter;
+import com.example.foodapp.AuthentificationActivity;
 import com.example.foodapp.DisplayOrderActivity;
 import com.example.foodapp.Models.Order;
 import com.example.foodapp.Models.User;
@@ -34,7 +36,7 @@ public class ProfilFragment extends Fragment {
     private View view;
     private ImageView ProfileIMGOutPut;
     private TextView ClientFullName, ClientPhoneNumber, ClientEmail;
-    private MaterialCardView ResetPasswordBTN, UpdateProfilBTN;
+    private MaterialCardView ResetPasswordBTN, UpdateProfilBTN, LogOutBTN;
     private DatabaseReference Refuser;
     private FirebaseAuth Auth;
     @Override
@@ -58,6 +60,7 @@ public class ProfilFragment extends Fragment {
         ClientPhoneNumber = view.findViewById(R.id.ClientPhoneNumber);
         ClientFullName = view.findViewById(R.id.ClientFullName);
         ProfileIMGOutPut = view.findViewById(R.id.ProfileIMGOutPut);
+        LogOutBTN = view.findViewById(R.id.LogOutBTN);
         Auth = FirebaseAuth.getInstance();
         Refuser = FirebaseDatabase.getInstance(getString(R.string.DBURL))
                 .getReference()
@@ -73,6 +76,15 @@ public class ProfilFragment extends Fragment {
                         .replace(R.id.MainFragmentContainer, new ProfilUpdateFragment())
                         .addToBackStack(null);
                 fragmentTransaction.commit();
+            }
+        });
+        LogOutBTN.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Auth.signOut();
+                Intent i = new Intent(getActivity(), AuthentificationActivity.class);
+                startActivity(i);
+                getActivity().finish();
             }
         });
     }
