@@ -38,7 +38,7 @@
                         app:cardElevation="0dp"
                         android:elevation="10dp"
                         android:layout_gravity="center"
-                        android:layout_marginTop="50dp">
+                        android:layout_marginTop="40dp">
                         <ImageView
                             android:id="@+id/ProfileIMGOutPut"
                             android:layout_width="match_parent"
@@ -55,7 +55,7 @@
                         android:textAlignment="textStart"
                         android:textColor="@color/Gray"
                         android:fontFamily="@font/poppins_medium"
-                        android:layout_marginTop="80dp"/>
+                        android:layout_marginTop="70dp"/>
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -155,8 +155,8 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:padding="10dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="10dp">
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp">
                     <ImageView
                         android:layout_width="25dp"
                         android:layout_height="25dp"
@@ -184,7 +184,6 @@
                 android:id="@+id/UpdateProfilBTN"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/ResetPasswordBTN"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -200,8 +199,8 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:padding="10dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="10dp">
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp">
                     <ImageView
                         android:layout_width="25dp"
                         android:layout_height="25dp"
@@ -223,6 +222,37 @@
                         android:src="@drawable/angle_left_solid"
                         android:rotationY="180"
                         app:tint="@color/SecondTextColor" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/LogOutBTN"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/UpdateProfilBTN"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="10dp"
+                app:cardBackgroundColor="@color/PrimaryColor"
+                app:cardElevation="0dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="10dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Se déconnecter"
+                        android:textSize="16sp"
+                        android:textAlignment="center"
+                        android:textColor="@color/white"
+                        android:fontFamily="@font/poppins_medium"
+                        android:layout_weight="1"/>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
         </androidx.constraintlayout.widget.ConstraintLayout>
