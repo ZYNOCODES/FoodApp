@@ -138,18 +138,24 @@ public class AdminConfirmeOrderActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         // deleting the product
-                        RefOrder.removeValue()
-                                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Void> task) {
-                                        if(task.isSuccessful()){
-                                            onBackPressed();
-                                            Toast.makeText(AdminConfirmeOrderActivity.this, "Order deleted", Toast.LENGTH_SHORT).show();
-                                        }else{
-                                            Toast.makeText(AdminConfirmeOrderActivity.this, "Error , check your internet connexion", Toast.LENGTH_SHORT).show();
+                        if (RefOrder != null){
+                            RefOrder.removeValue()
+                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            if(task.isSuccessful()){
+                                                onBackPressed();
+                                                Toast.makeText(AdminConfirmeOrderActivity.this, "Order deleted", Toast.LENGTH_SHORT).show();
+                                            }else{
+                                                Toast.makeText(AdminConfirmeOrderActivity.this, task.getException().toString(), Toast.LENGTH_SHORT).show();
+                                            }
                                         }
-                                    }
-                                });
+                                    });
+                        }else {
+                            Toast.makeText(AdminConfirmeOrderActivity.this, "la commande est annulée par le client", Toast.LENGTH_SHORT).show();
+                            onBackPressed();
+                        }
+
                     }
                 });
                 mydialog.setNegativeButton("Non", new DialogInterface.OnClickListener() {
@@ -163,91 +169,102 @@ public class AdminConfirmeOrderActivity extends AppCompatActivity {
         });
     }
     private void fetchDataFromDB(){
-        RefOrder.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                order = snapshot.getValue(Order.class);
-                final int[] totalItem = {0};
-                if (order != null) {
-                    TotleCartPrice.setText(String.valueOf(order.getPrice()));
-                    for (int i = 0 ; i < order.getProducts().size() ; i++){
-                        totalItem[0] = totalItem[0] + Integer.parseInt(order.getProducts().get(i).getProduct().getPrice());
-                    }
-                    TotleItemsPrice.setText(String.valueOf(totalItem[0]));
-                    DeliveryCartPrice.setText(String.valueOf(Integer.parseInt(order.getPrice()) - totalItem[0]));
-                    if (order.getType().equals("a domicile")){
-                        DeleveryCard.setVisibility(View.GONE);
-                    }else {
-                        DeleveryCard.setVisibility(View.VISIBLE);
-                        LocationOutPut.setText(String.valueOf(order.getLocation()));
-                        DeleveryNotesOutPut.setText(String.valueOf(order.getLocationNotes()));
-                    }
-                    myOrderAdapter = new MyOrderAdapter(AdminConfirmeOrderActivity.this,order.getProducts());
-                    CartRecyclerView.setAdapter(myOrderAdapter);
-                    Refuser = FirebaseDatabase.getInstance(getString(R.string.DBURL))
-                            .getReference()
-                            .child("Users")
-                            .child(order.getClientID());
-                    Refuser.addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            User user = snapshot.getValue(User.class);
-                            if (user != null) {
-                                if (user.getPhone() != null && user.getFullName() != null){
-                                    ClientPhoneNumber.setText(String.valueOf(user.getPhone()));
-                                    ClientFullName.setText(String.valueOf(user.getFullName()));
+        if (RefOrder != null){
+            RefOrder.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    order = snapshot.getValue(Order.class);
+                    final int[] totalItem = {0};
+                    if (order != null) {
+                        TotleCartPrice.setText(String.valueOf(order.getPrice()));
+                        for (int i = 0 ; i < order.getProducts().size() ; i++){
+                            totalItem[0] = totalItem[0] + Integer.parseInt(order.getProducts().get(i).getProduct().getPrice());
+                        }
+                        TotleItemsPrice.setText(String.valueOf(totalItem[0]));
+                        DeliveryCartPrice.setText(String.valueOf(Integer.parseInt(order.getPrice()) - totalItem[0]));
+                        if (order.getType().equals("a domicile")){
+                            DeleveryCard.setVisibility(View.GONE);
+                        }else {
+                            DeleveryCard.setVisibility(View.VISIBLE);
+                            LocationOutPut.setText(String.valueOf(order.getLocation()));
+                            DeleveryNotesOutPut.setText(String.valueOf(order.getLocationNotes()));
+                        }
+                        myOrderAdapter = new MyOrderAdapter(AdminConfirmeOrderActivity.this,order.getProducts());
+                        CartRecyclerView.setAdapter(myOrderAdapter);
+                        Refuser = FirebaseDatabase.getInstance(getString(R.string.DBURL))
+                                .getReference()
+                                .child("Users")
+                                .child(order.getClientID());
+                        Refuser.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                User user = snapshot.getValue(User.class);
+                                if (user != null) {
+                                    if (user.getPhone() != null && user.getFullName() != null){
+                                        ClientPhoneNumber.setText(String.valueOf(user.getPhone()));
+                                        ClientFullName.setText(String.valueOf(user.getFullName()));
+                                    }
                                 }
                             }
-                        }
 
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
-                            Log.e("DatabaseError", "Operation canceled", error.toException());
-                            Toast.makeText(AdminConfirmeOrderActivity.this, "Database operation canceled: " + error.getMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                    });
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+                                Log.e("DatabaseError", "Operation canceled", error.toException());
+                                Toast.makeText(AdminConfirmeOrderActivity.this, "Database operation canceled: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+
+
                 }
-
-
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Log.e("DatabaseError", "Operation canceled", error.toException());
-                Toast.makeText(AdminConfirmeOrderActivity.this, "Database operation canceled: " + error.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    Log.e("DatabaseError", "Operation canceled", error.toException());
+                    Toast.makeText(AdminConfirmeOrderActivity.this, "Database operation canceled: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
+        }else {
+            Toast.makeText(AdminConfirmeOrderActivity.this, "la commande est annulée par le client", Toast.LENGTH_SHORT).show();
+            onBackPressed();
+        }
 
     }
     protected void updateOrderIntoDB(Map<String, Object> product){
-        RefOrder.updateChildren(product)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()){
-                            RefOrderConfirmation = FirebaseDatabase.getInstance(getString(R.string.DBURL))
-                                    .getReference()
-                                    .child("Users")
-                                    .child(Auth.getCurrentUser().getUid())
-                                    .child("Orders");
-                            RefOrderConfirmation.child(order.getID()).setValue(order)
-                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<Void> task) {
-                                            if (task.isSuccessful()){
-                                                dialog.dismiss();
-                                                onBackPressed();
-                                                Toast.makeText(AdminConfirmeOrderActivity.this, "La commande a été confirmé avec succès", Toast.LENGTH_SHORT).show();
-                                            }else {
-                                                dialog.dismiss();
-                                                Toast.makeText(AdminConfirmeOrderActivity.this, task.getException().toString(), Toast.LENGTH_SHORT).show();
+        if (RefOrder != null){
+            RefOrder.updateChildren(product)
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()){
+                                RefOrderConfirmation = FirebaseDatabase.getInstance(getString(R.string.DBURL))
+                                        .getReference()
+                                        .child("Users")
+                                        .child(Auth.getCurrentUser().getUid())
+                                        .child("Orders");
+                                RefOrderConfirmation.child(order.getID()).setValue(order)
+                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                if (task.isSuccessful()){
+                                                    dialog.dismiss();
+                                                    onBackPressed();
+                                                    Toast.makeText(AdminConfirmeOrderActivity.this, "La commande a été confirmé avec succès", Toast.LENGTH_SHORT).show();
+                                                }else {
+                                                    dialog.dismiss();
+                                                    Toast.makeText(AdminConfirmeOrderActivity.this, task.getException().toString(), Toast.LENGTH_SHORT).show();
+                                                }
                                             }
-                                        }
-                                    });
-                        }else {
-                            dialog.dismiss();
-                            Toast.makeText(AdminConfirmeOrderActivity.this, task.getException().toString(), Toast.LENGTH_SHORT).show();
+                                        });
+                            }else {
+                                dialog.dismiss();
+                                Toast.makeText(AdminConfirmeOrderActivity.this, task.getException().toString(), Toast.LENGTH_SHORT).show();
+                            }
                         }
-                    }
-                });
+                    });
+        }else {
+            Toast.makeText(AdminConfirmeOrderActivity.this, "la commande est annulée par le client", Toast.LENGTH_SHORT).show();
+            onBackPressed();
+        }
+
     }
 }

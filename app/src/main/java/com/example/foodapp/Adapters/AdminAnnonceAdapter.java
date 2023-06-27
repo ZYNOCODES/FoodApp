@@ -22,6 +22,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -30,6 +32,7 @@ public class AdminAnnonceAdapter extends RecyclerView.Adapter<AdminAnnonceViewHo
     private Context context;
     private ArrayList<Product> annonces;
     private DatabaseReference RefProduct;
+    private StorageReference ProductsImgref;
 
     public AdminAnnonceAdapter(Context context, ArrayList<Product> annonces) {
         this.context = context;
@@ -49,6 +52,8 @@ public class AdminAnnonceAdapter extends RecyclerView.Adapter<AdminAnnonceViewHo
         holder.AnnonceTitle.setText(annonces.get(position).getName());
         RefProduct = FirebaseDatabase.getInstance(context.getString(R.string.DBURL))
                 .getReference().child("Products");
+        ProductsImgref = FirebaseStorage.getInstance().getReference().child("ProductImages");
+
         holder.DeleteBTN.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -66,9 +71,18 @@ public class AdminAnnonceAdapter extends RecyclerView.Adapter<AdminAnnonceViewHo
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
                                         if(task.isSuccessful()){
-                                            Toast.makeText(context, "L'annonce a été supprimée avec succès", Toast.LENGTH_SHORT).show();
+                                            ProductsImgref.child(annonces.get(position).getImgRef()+".jpeg").delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<Void> task) {
+                                                    if (task.isSuccessful()){
+                                                        Toast.makeText(context, "L'annonce a été supprimée avec succès", Toast.LENGTH_SHORT).show();
+                                                    }else {
+                                                        Toast.makeText(context, task.getException().toString(), Toast.LENGTH_SHORT).show();
+                                                    }
+                                                }
+                                            });
                                         }else{
-                                            Toast.makeText(context, "Erreur, vérifiez votre connexion internet." , Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(context, task.getException().toString() , Toast.LENGTH_SHORT).show();
 
                                         }
                                     }

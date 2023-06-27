@@ -20,6 +20,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -28,7 +30,7 @@ public class AdminPostType2Adapter extends RecyclerView.Adapter<AdminPostType2Vi
     private Context context;
     private ArrayList<Product> Posts;
     private DatabaseReference RefProduct;
-
+    private StorageReference ProductsImgref;
     public AdminPostType2Adapter(Context context, ArrayList<Product> posts) {
         this.context = context;
         Posts = posts;
@@ -49,6 +51,8 @@ public class AdminPostType2Adapter extends RecyclerView.Adapter<AdminPostType2Vi
         holder.PostPrice.setText(Posts.get(position).getPrice());
         RefProduct = FirebaseDatabase.getInstance(context.getString(R.string.DBURL))
                 .getReference().child("Products");
+        ProductsImgref = FirebaseStorage.getInstance().getReference().child("ProductImages");
+
         holder.DeleteBTN.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -66,9 +70,19 @@ public class AdminPostType2Adapter extends RecyclerView.Adapter<AdminPostType2Vi
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
                                         if(task.isSuccessful()){
-                                            Toast.makeText(context, "La publication a été supprimée avec succès", Toast.LENGTH_SHORT).show();
+                                            ProductsImgref.child(Posts.get(position).getImgRef()+".jpeg").delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<Void> task) {
+                                                    if (task.isSuccessful()){
+                                                        Toast.makeText(context, "La publication a été supprimée avec succès", Toast.LENGTH_SHORT).show();
+
+                                                    }else {
+                                                        Toast.makeText(context, task.getException().toString(), Toast.LENGTH_SHORT).show();
+                                                    }
+                                                }
+                                            });
                                         }else{
-                                            Toast.makeText(context, "Erreur, vérifiez votre connexion internet.", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(context, task.getException().toString(), Toast.LENGTH_SHORT).show();
 
                                         }
                                     }

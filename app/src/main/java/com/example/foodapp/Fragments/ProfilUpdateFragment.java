@@ -113,7 +113,22 @@ public class ProfilUpdateFragment extends Fragment {
                                                             updates.put("fullName", ClientFullName.getText().toString());
                                                             updates.put("img", ImageURL);
                                                             updates.put("imgRef",id);
-                                                            updateImageIntoDB(updates);
+                                                            if (user.getImgRef() != null){
+                                                                UsersImgref.child(user.getImgRef()+".jpeg").delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                    @Override
+                                                                    public void onComplete(@NonNull Task<Void> task) {
+                                                                        if (task.isSuccessful()){
+                                                                            updateImageIntoDB(updates);
+                                                                        }else {
+                                                                            Toast.makeText(getActivity(), task.getException().toString(), Toast.LENGTH_SHORT).show();
+                                                                        }
+                                                                    }
+                                                                });
+                                                            }else {
+                                                                updateImageIntoDB(updates);
+                                                            }
+
+
                                                         }
                                                     });
                                         }else {
