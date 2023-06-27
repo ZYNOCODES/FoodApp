@@ -8,6 +8,7 @@ public class Product {
     private String Category;
     private String Description;
     private String IMG;
+    private String imgRef;
     private Boolean Annonce;
 
     public Product(String ID, String name, String price, String ingredients, String category, String description, String IMG, Boolean annonce) {
@@ -21,7 +22,7 @@ public class Product {
         Annonce = annonce;
     }
 
-    public Product(String ID, String name, String price, String ingredients, String category, String description, String IMG) {
+    public Product(String ID, String name, String price, String ingredients, String category, String description, String IMG, String imgRef, Boolean annonce) {
         this.ID = ID;
         Name = name;
         Price = price;
@@ -29,11 +30,8 @@ public class Product {
         Category = category;
         Description = description;
         this.IMG = IMG;
-    }
-
-    public Product(String name, String price) {
-        Name = name;
-        Price = price;
+        this.imgRef = imgRef;
+        Annonce = annonce;
     }
 
     public Product() {
@@ -101,6 +99,14 @@ public class Product {
 
     public void setAnnonce(Boolean annonce) {
         Annonce = annonce;
+    }
+
+    public String getImgRef() {
+        return imgRef;
+    }
+
+    public void setImgRef(String imgRef) {
+        this.imgRef = imgRef;
     }
 }
 

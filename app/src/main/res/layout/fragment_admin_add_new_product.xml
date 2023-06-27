@@ -28,7 +28,8 @@
                     android:src="@drawable/plus_solid"
                     app:tint="@color/white"
                     android:scaleType="centerCrop"
-                    android:layout_gravity="center"/>
+                    android:layout_gravity="center"
+                    android:elevation="10dp"/>
             </androidx.cardview.widget.CardView>
 
             <LinearLayout

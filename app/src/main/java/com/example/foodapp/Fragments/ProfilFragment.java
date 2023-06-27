@@ -98,7 +98,7 @@ public class ProfilFragment extends Fragment {
                         ClientPhoneNumber.setText(user.getPhone().toString());
                         ClientFullName.setText(user.getFullName().toString());
                         ClientEmail.setText(user.getEmail().toString());
-                        if (user.getIMG() > 0){
+                        if (user.getIMG() != null){
                             Picasso.get().load(user.getIMG()).into(ProfileIMGOutPut);
                         }
 

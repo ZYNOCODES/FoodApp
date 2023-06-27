@@ -4,13 +4,16 @@ public class User {
     private String Email;
     private String FullName;
     private String Phone;
-    private int IMG;
+    private String IMG;
 
-    public User(String email, String fullName, String phone, int IMG) {
+    private String imgRef;
+
+    public User(String email, String fullName, String phone, String IMG, String imgRef) {
         Email = email;
         FullName = fullName;
         Phone = phone;
         this.IMG = IMG;
+        this.imgRef = imgRef;
     }
 
     public User(String email, String fullName, String phone) {
@@ -46,11 +49,19 @@ public class User {
         Phone = phone;
     }
 
-    public int getIMG() {
+    public String getIMG() {
         return IMG;
     }
 
-    public void setIMG(int IMG) {
+    public void setIMG(String IMG) {
         this.IMG = IMG;
+    }
+
+    public String getImgRef() {
+        return imgRef;
+    }
+
+    public void setImgRef(String imgRef) {
+        this.imgRef = imgRef;
     }
 }

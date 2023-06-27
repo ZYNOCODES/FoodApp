@@ -121,6 +121,7 @@ public class AdminDisplayProductActivity extends AppCompatActivity {
                                                                     updates.put("price", PriceOutPut.getText().toString());
                                                                     updates.put("description", AboutOutPut.getText().toString());
                                                                     updates.put("img", ImageURL);
+                                                                    updates.put("imgRef", id);
                                                                     updateProductIntoDB(updates);
                                                                 }
                                                             });
@@ -303,19 +304,28 @@ public class AdminDisplayProductActivity extends AppCompatActivity {
             return true;
         }
     }
-    protected void updateProductIntoDB(Map<String, Object> product){
-        RefProduct.updateChildren(product)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()){
-                            dialog.dismiss();
-                            Toast.makeText(AdminDisplayProductActivity.this, "Le produit a été modifié", Toast.LENGTH_SHORT).show();
-                        }else {
-                            dialog.dismiss();
-                            Toast.makeText(AdminDisplayProductActivity.this, task.getException().toString(), Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
+    protected void updateProductIntoDB(Map<String, Object> productupdate){
+        ProductImgref.child(product.getImgRef()+".jpeg").delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()){
+                    RefProduct.updateChildren(productupdate)
+                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if (task.isSuccessful()){
+                                        dialog.dismiss();
+                                        Toast.makeText(AdminDisplayProductActivity.this, "Le produit a été modifié", Toast.LENGTH_SHORT).show();
+                                    }else {
+                                        dialog.dismiss();
+                                        Toast.makeText(AdminDisplayProductActivity.this, task.getException().toString(), Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            });
+                }else {
+                    Toast.makeText(AdminDisplayProductActivity.this, task.getException().toString(), Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 }

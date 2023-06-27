@@ -39,13 +39,13 @@
                         android:elevation="10dp"
                         android:layout_gravity="center"
                         android:layout_marginTop="40dp"
-                        app:strokeColor="@color/Gray"
+                        app:strokeColor="@color/LowGold"
                         app:strokeWidth="5dp">
                         <ImageView
                             android:id="@+id/ProfileIMGOutPut"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:src="@drawable/profil"
+                            android:src="@drawable/profilavatar"
                             android:scaleType="centerCrop"
                             android:layout_gravity="center"/>
                     </com.google.android.material.card.MaterialCardView>
@@ -206,7 +206,7 @@
                     <ImageView
                         android:layout_width="25dp"
                         android:layout_height="25dp"
-                        android:src="@drawable/icons8_update"
+                        android:src="@drawable/rotate_right_solid"
                         app:tint="@color/SecondTextColor" />
                     <TextView
                         android:layout_width="wrap_content"

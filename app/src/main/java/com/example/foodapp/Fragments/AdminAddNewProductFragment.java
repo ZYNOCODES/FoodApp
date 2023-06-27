@@ -89,11 +89,11 @@ public class AdminAddNewProductFragment extends Fragment {
                                                         String idd = RefProduct.getKey();
                                                         if (AnnonceCheckBox.isChecked()){
                                                             Product product = new Product(idd,NameInPut.getText().toString(),PriceInPut.getText().toString(),
-                                                                    IngredientsInPut.getText().toString(),CategoryInPut.getText().toString(),AboutInPut.getText().toString(),ImageURL,true);
+                                                                    IngredientsInPut.getText().toString(),CategoryInPut.getText().toString(),AboutInPut.getText().toString(),ImageURL,id,true);
                                                             saveProductIntoDB(product);
                                                         }else {
                                                             Product product = new Product(idd,NameInPut.getText().toString(),PriceInPut.getText().toString(),
-                                                                    IngredientsInPut.getText().toString(),CategoryInPut.getText().toString(),AboutInPut.getText().toString(),ImageURL,false);
+                                                                    IngredientsInPut.getText().toString(),CategoryInPut.getText().toString(),AboutInPut.getText().toString(),ImageURL,id,false);
                                                             saveProductIntoDB(product);
                                                         }
 
