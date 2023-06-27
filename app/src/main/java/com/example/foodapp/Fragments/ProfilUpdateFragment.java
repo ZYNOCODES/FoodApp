@@ -95,6 +95,7 @@ public class ProfilUpdateFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 if (isNotEmpty()){
+                    dialog.show();
                     if (image_file != null) {
                         String id = GenerateID();
                         UsersImgref.child(id+".jpeg").putFile(image_file)
@@ -143,6 +144,7 @@ public class ProfilUpdateFragment extends Fragment {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
                             // deleting the profil IMG
+                            dialog.show();
                             DeleteImagefromDB();
                             ProfileIMGOutPut.setImageDrawable(getActivity().getDrawable(R.drawable.profilavatar));
                         }
@@ -337,6 +339,7 @@ public class ProfilUpdateFragment extends Fragment {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
                                         if (task.isSuccessful()){
+                                            dialog.dismiss();
                                             Toast.makeText(getActivity(), "Photo de profile a ete supprimée", Toast.LENGTH_SHORT).show();
                                             fetchDataFromDB();
                                         }else {
