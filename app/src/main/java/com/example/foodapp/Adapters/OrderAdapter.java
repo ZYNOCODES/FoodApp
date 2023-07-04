@@ -14,20 +14,23 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.foodapp.DisplayOrderActivity;
 import com.example.foodapp.DisplayProductActivity;
+import com.example.foodapp.ItemSwipeCallback;
 import com.example.foodapp.Models.Order;
 import com.example.foodapp.R;
 import com.example.foodapp.ViewHolders.OrderViewHolder;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 
-public class OrderAdapter extends RecyclerView.Adapter<OrderViewHolder> {
+public class OrderAdapter extends RecyclerView.Adapter<OrderViewHolder> implements ItemSwipeCallback {
         private Context context;
         private ArrayList<Order> orders;
-        private DatabaseReference RefOrder;
+        private DatabaseReference RefOrder, RefConfirmedOrder;
+        private FirebaseAuth Auth;
         public OrderAdapter(Context context, ArrayList<Order> orders) {
                 this.context = context;
                 this.orders = orders;
@@ -105,5 +108,45 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderViewHolder> {
         @Override
         public int getItemCount() {
                 return orders.size();
+        }
+
+        @Override
+        public void onItemSwiped(int position) {
+                Auth = FirebaseAuth.getInstance();
+                RefConfirmedOrder = FirebaseDatabase.getInstance(context.getString(R.string.DBURL))
+                        .getReference()
+                        .child("Users")
+                        .child(Auth.getCurrentUser().getUid())
+                        .child("Orders");
+                //delete order
+                AlertDialog.Builder mydialog = new AlertDialog.Builder(context);
+                mydialog.setTitle("Commande est complète");
+                mydialog.setMessage("Voulez-vous vraiment supprimer cette commande "
+                        +orders.get(position).getID()+" ?");
+                mydialog.setPositiveButton("Oui", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                                // deleting the product
+                                RefConfirmedOrder.child(orders.get(position).getID()).removeValue()
+                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<Void> task) {
+                                                        if(task.isSuccessful()){
+                                                                Toast.makeText(context, "La commande a été supprimée avec succès", Toast.LENGTH_SHORT).show();
+                                                        }else{
+                                                                Toast.makeText(context, task.getException().toString(), Toast.LENGTH_SHORT).show();
+                                                        }
+                                                }
+                                        });
+                        }
+                });
+                mydialog.setNegativeButton("Non", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                                dialogInterface.dismiss();
+                                notifyDataSetChanged();
+                        }
+                });
+                mydialog.show();
         }
 }

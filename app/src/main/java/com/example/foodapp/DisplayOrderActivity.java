@@ -104,7 +104,7 @@ public class DisplayOrderActivity extends AppCompatActivity {
                         DeleveryCard.setVisibility(View.GONE);
                     }else {
                         DeleveryCard.setVisibility(View.VISIBLE);
-                        LocationOutPut.setText(String.valueOf(order.getLocation()));
+                        LocationOutPut.setText(String.valueOf(order.getLocation().getAddress()));
                         DeleveryNotesOutPut.setText(String.valueOf(order.getLocationNotes()));
                     }
                     myOrderAdapter = new MyOrderAdapter(DisplayOrderActivity.this,order.getProducts());

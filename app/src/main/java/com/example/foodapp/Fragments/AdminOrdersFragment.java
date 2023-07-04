@@ -5,6 +5,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -38,6 +39,7 @@ public class AdminOrdersFragment extends Fragment {
     private OrderAdapter orderAdapter;
     private DatabaseReference RefOrder, RefOrderConfirmed;
     private FirebaseAuth Auth;
+    private ItemTouchHelper itemTouchHelper;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -54,9 +56,25 @@ public class AdminOrdersFragment extends Fragment {
         LinearLayoutManager Confirmedmanager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         MyAdminConfirmedOrdersRecyclerView.setLayoutManager(Confirmedmanager);
 
+        // Create an ItemTouchHelper instance
+        itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                int position = viewHolder.getAdapterPosition();
+                orderAdapter.onItemSwiped(position);
+            }
+        });
+
+        // Attach the ItemTouchHelper to the RecyclerView
+        itemTouchHelper.attachToRecyclerView(MyAdminConfirmedOrdersRecyclerView);
+
         //fetch data
         fetchDataFromDB();
-
         return view;
     }
 

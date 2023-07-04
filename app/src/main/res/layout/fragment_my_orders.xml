@@ -23,6 +23,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
             <LinearLayout
+                android:id="@+id/LocationContainer"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
@@ -51,10 +52,10 @@
                 app:cardBackgroundColor="@color/PrimaryColor"
                 app:cardCornerRadius="25dp">
                 <ImageView
-                    android:id="@+id/ProfilIMG"
+                    android:id="@+id/ProfileIMG"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:src="@drawable/cv"
+                    android:src="@drawable/profilavatar"
                     android:scaleType="centerCrop"/>
             </com.google.android.material.card.MaterialCardView>
 

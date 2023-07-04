@@ -5,14 +5,14 @@ import java.util.ArrayList;
 public class Order {
     private String ID;
     private String Type;
-    private String Location;
+    private Localisation Location;
     private String LocationNotes;
     private String Price;
     private String ClientID;
     private Boolean Confirmation;
     private ArrayList<Cart> Products;
 
-    public Order(String ID, String type, String location, String locationNotes, String price, String clientID, Boolean confirmation, ArrayList<Cart> products) {
+    public Order(String ID, String type, Localisation location, String locationNotes, String price, String clientID, Boolean confirmation, ArrayList<Cart> products) {
         this.ID = ID;
         Type = type;
         Location = location;
@@ -58,11 +58,11 @@ public class Order {
         Type = type;
     }
 
-    public String getLocation() {
+    public Localisation getLocation() {
         return Location;
     }
 
-    public void setLocation(String location) {
+    public void setLocation(Localisation location) {
         Location = location;
     }
 

@@ -1,26 +1,42 @@
 package com.example.foodapp.Fragments;
 
+import android.Manifest;
 import android.app.Dialog;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.PorterDuff;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.AbsListView;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,11 +45,15 @@ import com.example.foodapp.Adapters.CartAdapter;
 import com.example.foodapp.IconColorChangeListener;
 import com.example.foodapp.MainActivity;
 import com.example.foodapp.Models.Cart;
+import com.example.foodapp.Models.Localisation;
 import com.example.foodapp.Models.Order;
 import com.example.foodapp.Models.Product;
 import com.example.foodapp.Models.User;
 import com.example.foodapp.R;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.card.MaterialCardView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -43,10 +63,14 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 public class CartFragment extends Fragment {
     private View view;
+    private Animation vibrate;
     private MaterialCardView DeleveryNotes, PlaceMYOrderBTN;
     private CheckBox DeleveryCheckBox;
     private DatabaseReference RefCart, RefOrder, Refuser;
@@ -55,10 +79,18 @@ public class CartFragment extends Fragment {
     private RecyclerView CartRecyclerView;
     private LinearLayout AddToCartBTN;
     private TextView DeliveryCartPrice, TotleCartPrice, TotleItemsPrice, LocationOutPut, ClientPhoneNumber, ClientFullName;
+    private ImageView CopyBTN;
+    private LinearLayout LocationContainer;
     private ArrayList<Cart> products;
     private IconColorChangeListener iconColorChangeListener;
     private Dialog dialog;
     private EditText DeleveryNotesInPut;
+    private ClipboardManager myClipboard;
+    private ClipData myClip;
+    private FusedLocationProviderClient fusedLocationProviderClient;
+    private Localisation UserLocation;
+    private  final  static int REQUEST_CODE=100;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -72,7 +104,6 @@ public class CartFragment extends Fragment {
         dialog.setContentView(R.layout.dialog_wait1);
         dialog.setCanceledOnTouchOutside(false);
 
-
         //recycler view
         LinearLayoutManager manager = new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false);
         CartRecyclerView.setLayoutManager(manager);
@@ -81,6 +112,19 @@ public class CartFragment extends Fragment {
         fetchDataFromDB();
 
         return view;
+    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+
+        if (requestCode==REQUEST_CODE){
+            if (grantResults.length>0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                getLastLocation();
+            }
+            else {
+                Toast.makeText(getActivity(), "La permission est requise", Toast.LENGTH_SHORT).show();
+            }
+        }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
     @Override
     public void onAttach(@NonNull Context context) {
@@ -95,9 +139,9 @@ public class CartFragment extends Fragment {
     }
 
     private void InisializationOfFealds(){
+        fusedLocationProviderClient= LocationServices.getFusedLocationProviderClient(getActivity());
         DeleveryNotes = view.findViewById(R.id.DeleveryNotes);
         DeleveryCheckBox = view.findViewById(R.id.DeleveryCheckBox);
-        DeleveryNotes.setVisibility(View.GONE);
         CartRecyclerView = view.findViewById(R.id.CartRecyclerView);
         AddToCartBTN = view.findViewById(R.id.AddToCartBTN);
         PlaceMYOrderBTN = view.findViewById(R.id.PlaceMYOrderBTN);
@@ -108,6 +152,11 @@ public class CartFragment extends Fragment {
         DeleveryNotesInPut = view.findViewById(R.id.DeleveryNotesInPut);
         ClientPhoneNumber = view.findViewById(R.id.ClientPhoneNumber);
         ClientFullName = view.findViewById(R.id.ClientFullName);
+        CopyBTN = view.findViewById(R.id.CopyBTN);
+        myClipboard = (ClipboardManager) requireContext().getSystemService(Context.CLIPBOARD_SERVICE);
+        LocationContainer = view.findViewById(R.id.LocationContainer);
+        LocationContainer.setVisibility(View.GONE);
+        vibrate = AnimationUtils.loadAnimation(getActivity(), R.anim.vibrate);
         Auth = FirebaseAuth.getInstance();
         RefCart = FirebaseDatabase.getInstance(getString(R.string.DBURL))
                 .getReference()
@@ -126,11 +175,17 @@ public class CartFragment extends Fragment {
         DeleveryCheckBox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (DeleveryCheckBox.isChecked()){
-                    DeleveryNotes.setVisibility(View.VISIBLE);
+                if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
+                    if (DeleveryCheckBox.isChecked()){
+                        getLastLocation();
+                    }else {
+                        LocationContainer.setVisibility(View.GONE);
+                    }
                 }else {
-                    DeleveryNotes.setVisibility(View.GONE);
+                    DeleveryCheckBox.setChecked(false);
+                    getLastLocation();
                 }
+
             }
         });
         AddToCartBTN.setOnClickListener(new View.OnClickListener() {
@@ -157,11 +212,27 @@ public class CartFragment extends Fragment {
                         Order order = new Order(idd,"a domicile",String.valueOf(TotleCartPrice.getText()),Auth.getCurrentUser().getUid(),false,products);
                         saveOrderIntoDB(order);
                     }else {
-                        Order order = new Order(idd,"Livraison",String.valueOf(LocationOutPut.getText()),String.valueOf(DeleveryNotesInPut.getText()),
-                                String.valueOf(TotleCartPrice.getText()),Auth.getCurrentUser().getUid(),false,products);
-                        saveOrderIntoDB(order);
+                        if (UserLocation != null){
+                            Order order = new Order(idd,"Livraison",UserLocation,String.valueOf(DeleveryNotesInPut.getText()),
+                                    String.valueOf(TotleCartPrice.getText()),Auth.getCurrentUser().getUid(),false,products);
+                            saveOrderIntoDB(order);
+                        }else {
+                            Toast.makeText(getActivity(), "Localisation est requis", Toast.LENGTH_SHORT).show();
+                        }
+
                     }
                 }
+            }
+        });
+        CopyBTN.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (!LocationOutPut.getText().toString().isEmpty()){
+                    myClip = ClipData.newPlainText("text", LocationOutPut.getText().toString());
+                    myClipboard.setPrimaryClip(myClip);
+                    Toast.makeText(getActivity(), "Location Copied",Toast.LENGTH_SHORT).show();
+                }
+                CopyBTN.startAnimation(vibrate);
             }
         });
     }
@@ -236,5 +307,41 @@ public class CartFragment extends Fragment {
                         }
                     }
                 });
+    }
+    private void getLastLocation() {
+        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
+            fusedLocationProviderClient.getLastLocation()
+                    .addOnSuccessListener(new OnSuccessListener<Location>() {
+                        @Override
+                        public void onSuccess(Location location) {
+                            if (location !=null){
+                                Geocoder geocoder=new Geocoder(getActivity(), Locale.getDefault());
+                                List<Address> addresses= null;
+                                try {
+                                    addresses = geocoder.getFromLocation(location.getLatitude(),location.getLongitude(),1);
+                                    UserLocation = new Localisation(addresses.get(0).getAddressLine(0),addresses.get(0).getLocality(),
+                                            String.valueOf(addresses.get(0).getLatitude()),String.valueOf(addresses.get(0).getLongitude()));
+                                    LocationOutPut.setText(addresses.get(0).getAddressLine(0));
+                                    //set locationcontainer visible
+                                    DeleveryCheckBox.setChecked(true);
+                                    LocationContainer.setVisibility(View.VISIBLE);
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+
+                            }
+
+                        }
+                    });
+
+
+        }else {
+            askPermission();
+        }
+    }
+    private void askPermission() {
+        ActivityCompat.requestPermissions(getActivity(), new String[]
+                {Manifest.permission.ACCESS_FINE_LOCATION},REQUEST_CODE);
+        DeleveryCheckBox.startAnimation(vibrate);
     }
 }
