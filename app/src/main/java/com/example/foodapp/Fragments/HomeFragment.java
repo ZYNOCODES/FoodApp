@@ -1,6 +1,7 @@
 package com.example.foodapp.Fragments;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
@@ -11,6 +12,8 @@ import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -26,7 +29,7 @@ import android.widget.Toast;
 import com.example.foodapp.Adapters.AnnonceAdapter;
 import com.example.foodapp.Adapters.PostType1Adapter;
 import com.example.foodapp.Adapters.PostType2Adapter;
-import com.example.foodapp.Models.Localisation;
+import com.example.foodapp.Interfaces.IconColorChangeListener;
 import com.example.foodapp.Models.Product;
 import com.example.foodapp.Models.User;
 import com.example.foodapp.R;
@@ -53,6 +56,7 @@ public class HomeFragment extends Fragment {
     private PostType1Adapter postType1Adapter;
     private PostType2Adapter postType2Adapter;
     private AnnonceAdapter annonceAdapter;
+    private IconColorChangeListener iconColorChangeListener;
     private FirebaseAuth Auth;
     private DatabaseReference RefProduct, Refuser;
     private MaterialCardView DrinksBTN, SandwichBTN, PizzaBTN, BurgerBTN;
@@ -84,9 +88,26 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 //go to profile
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction()
+                        .replace(R.id.MainFragmentContainer, new ProfilFragment());
+                fragmentTransaction.commit();
+                // Inside your method where you want to change the icon colors
+                iconColorChangeListener.ChangeProfileIconColor();
             }
         });
         return view;
+    }
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+
+        // Check if the hosting Activity implements the interface
+        if (context instanceof IconColorChangeListener) {
+            iconColorChangeListener = (IconColorChangeListener) context;
+        } else {
+            throw new ClassCastException("Hosting Activity must implement IconColorChangeListener");
+        }
     }
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {

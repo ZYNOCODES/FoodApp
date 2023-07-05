@@ -96,7 +96,7 @@ public class DisplayOrderActivity extends AppCompatActivity {
                 if (order != null) {
                     TotleCartPrice.setText(String.valueOf(order.getPrice()));
                     for (int i = 0 ; i < order.getProducts().size() ; i++){
-                        totalItem[0] = totalItem[0] + Integer.parseInt(order.getProducts().get(i).getProduct().getPrice());
+                        totalItem[0] = totalItem[0] + Integer.parseInt(order.getProducts().get(i).getProduct().getPrice()) * Integer.parseInt(order.getProducts().get(i).getQuantity());
                     }
                     TotleItemsPrice.setText(String.valueOf(totalItem[0]));
                     DeliveryCartPrice.setText(String.valueOf(Integer.parseInt(order.getPrice()) - totalItem[0]));

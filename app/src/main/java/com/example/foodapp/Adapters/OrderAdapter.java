@@ -13,8 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.foodapp.DisplayOrderActivity;
-import com.example.foodapp.DisplayProductActivity;
-import com.example.foodapp.ItemSwipeCallback;
+import com.example.foodapp.Interfaces.ItemSwipeCallback;
 import com.example.foodapp.Models.Order;
 import com.example.foodapp.R;
 import com.example.foodapp.ViewHolders.OrderViewHolder;
@@ -29,7 +28,7 @@ import java.util.ArrayList;
 public class OrderAdapter extends RecyclerView.Adapter<OrderViewHolder> implements ItemSwipeCallback {
         private Context context;
         private ArrayList<Order> orders;
-        private DatabaseReference RefOrder, RefConfirmedOrder;
+        private DatabaseReference RefOrder, RefConfirmedOrder, RefUserOrder;
         private FirebaseAuth Auth;
         public OrderAdapter(Context context, ArrayList<Order> orders) {
                 this.context = context;
@@ -47,6 +46,11 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderViewHolder> implemen
         public void onBindViewHolder(@NonNull OrderViewHolder holder, int position) {
                 RefOrder = FirebaseDatabase.getInstance(context.getString(R.string.DBURL))
                         .getReference()
+                        .child("Orders");
+                RefUserOrder = FirebaseDatabase.getInstance(context.getString(R.string.DBURL))
+                        .getReference()
+                        .child("Users")
+                        .child(orders.get(position).getClientID())
                         .child("Orders");
                 if (orders.get(position).getConfirmation()){
                         holder.OrderCancelBTN.setVisibility(View.GONE);
@@ -66,15 +70,25 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderViewHolder> implemen
                                         mydialog.setPositiveButton("Oui", new DialogInterface.OnClickListener() {
                                                 @Override
                                                 public void onClick(DialogInterface dialogInterface, int i) {
-                                                        // deleting the product
+                                                        // deleting the order
                                                         RefOrder.child(orders.get(position).getID()).removeValue()
                                                                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                                                                         @Override
                                                                         public void onComplete(@NonNull Task<Void> task) {
                                                                                 if(task.isSuccessful()){
-                                                                                        Toast.makeText(context, "La commande a été supprimée avec succès", Toast.LENGTH_SHORT).show();
+                                                                                        RefUserOrder.child(orders.get(position).getID()).removeValue()
+                                                                                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                                                        @Override
+                                                                                                        public void onComplete(@NonNull Task<Void> task) {
+                                                                                                                if(task.isSuccessful()){
+                                                                                                                        Toast.makeText(context, "La commande a été supprimée avec succès", Toast.LENGTH_SHORT).show();
+                                                                                                                }else{
+                                                                                                                        Toast.makeText(context, task.getException().toString(), Toast.LENGTH_SHORT).show();
+                                                                                                                }
+                                                                                                        }
+                                                                                                });
                                                                                 }else{
-                                                                                        Toast.makeText(context, "Erreur, vérifiez votre connexion internet.", Toast.LENGTH_SHORT).show();
+                                                                                        Toast.makeText(context, task.getException().toString(), Toast.LENGTH_SHORT).show();
                                                                                 }
                                                                         }
                                                                 });

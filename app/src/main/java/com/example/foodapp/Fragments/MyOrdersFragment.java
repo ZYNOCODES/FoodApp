@@ -1,6 +1,7 @@
 package com.example.foodapp.Fragments;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
@@ -8,9 +9,11 @@ import android.location.Location;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -20,21 +23,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextClock;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.foodapp.Adapters.CartAdapter;
 import com.example.foodapp.Adapters.OrderAdapter;
-import com.example.foodapp.Models.Cart;
-import com.example.foodapp.Models.Localisation;
+import com.example.foodapp.Interfaces.IconColorChangeListener;
 import com.example.foodapp.Models.Order;
 import com.example.foodapp.Models.User;
 import com.example.foodapp.R;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.material.card.MaterialCardView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -50,12 +49,14 @@ import java.util.Locale;
 
 public class MyOrdersFragment extends Fragment {
     private View view;
-    private OrderAdapter orderAdapter;
-    private RecyclerView MyOrdersRecyclerView;
-    private ArrayList<Order> orders;
+    private OrderAdapter orderAdapter, ConfirmedorderAdapter;
+    private RecyclerView MyOrdersRecyclerView, MyConfirmedOrdersRecyclerView;
+    private ArrayList<Order> orders, ConfirmedOrders;
     private DatabaseReference RefOrder, Refuser;
     private FirebaseAuth Auth;
     private LinearLayout LocationContainer;
+    private IconColorChangeListener iconColorChangeListener;
+
     private ImageView ProfileIMG;
     private TextView LocationAdress;
     private FusedLocationProviderClient fusedLocationProviderClient;
@@ -71,6 +72,8 @@ public class MyOrdersFragment extends Fragment {
         //recycler view
         LinearLayoutManager manager = new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false);
         MyOrdersRecyclerView.setLayoutManager(manager);
+        LinearLayoutManager manager2 = new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false);
+        MyConfirmedOrdersRecyclerView.setLayoutManager(manager2);
 
         //fetch data
         fetchDataFromDB();
@@ -79,10 +82,26 @@ public class MyOrdersFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 //go to profile
-
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction()
+                        .replace(R.id.MainFragmentContainer, new ProfilFragment());
+                fragmentTransaction.commit();
+                // Inside your method where you want to change the icon colors
+                iconColorChangeListener.ChangeProfileIconColor();
             }
         });
         return view;
+    }
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+
+        // Check if the hosting Activity implements the interface
+        if (context instanceof IconColorChangeListener) {
+            iconColorChangeListener = (IconColorChangeListener) context;
+        } else {
+            throw new ClassCastException("Hosting Activity must implement IconColorChangeListener");
+        }
     }
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -100,6 +119,7 @@ public class MyOrdersFragment extends Fragment {
     private void InisializationOfFealds(){
         fusedLocationProviderClient= LocationServices.getFusedLocationProviderClient(getActivity());
         MyOrdersRecyclerView = view.findViewById(R.id.MyOrdersRecyclerView);
+        MyConfirmedOrdersRecyclerView = view.findViewById(R.id.MyConfirmedOrdersRecyclerView);
         LocationAdress = view.findViewById(R.id.LocationAdress);
         LocationContainer = view.findViewById(R.id.LocationContainer);
         LocationContainer.setVisibility(View.GONE);
@@ -107,6 +127,8 @@ public class MyOrdersFragment extends Fragment {
         Auth = FirebaseAuth.getInstance();
         RefOrder = FirebaseDatabase.getInstance(getString(R.string.DBURL))
                 .getReference()
+                .child("Users")
+                .child(Auth.getCurrentUser().getUid())
                 .child("Orders");
         Refuser = FirebaseDatabase.getInstance(getString(R.string.DBURL))
                 .getReference()
@@ -115,18 +137,43 @@ public class MyOrdersFragment extends Fragment {
     }
     private void fetchDataFromDB(){
         orders = new ArrayList<>();
+        ConfirmedOrders = new ArrayList<>();
         RefOrder.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 orders.clear();
+                ConfirmedOrders.clear();
                 for (DataSnapshot oneSnapshot : snapshot.getChildren()){
                     Order order = oneSnapshot.getValue(Order.class);
-                    if (order != null && order.getClientID().equals(Auth.getCurrentUser().getUid())) {
+                    if (order != null && order.getClientID().equals(Auth.getCurrentUser().getUid())
+                            && !order.getConfirmation()) {
                         orders.add(order);
+                    }
+                    if (order != null && order.getClientID().equals(Auth.getCurrentUser().getUid())
+                            && order.getConfirmation()) {
+                        ConfirmedOrders.add(order);
                     }
                 }
                 orderAdapter = new OrderAdapter(getActivity(),orders);
                 MyOrdersRecyclerView.setAdapter(orderAdapter);
+                ConfirmedorderAdapter = new OrderAdapter(getActivity(),ConfirmedOrders);
+                MyConfirmedOrdersRecyclerView.setAdapter(ConfirmedorderAdapter);
+                // Create an ItemTouchHelper instance
+                ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
+                    @Override
+                    public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+                        return false;
+                    }
+
+                    @Override
+                    public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                        int position = viewHolder.getAdapterPosition();
+                        ConfirmedorderAdapter.onItemSwiped(position);
+                    }
+                });
+
+                // Attach the ItemTouchHelper to the RecyclerView
+                itemTouchHelper.attachToRecyclerView(MyConfirmedOrdersRecyclerView);
             }
 
             @Override
@@ -156,7 +203,6 @@ public class MyOrdersFragment extends Fragment {
             }
         });
     }
-
     private void getLastLocation() {
         if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
             fusedLocationProviderClient.getLastLocation()

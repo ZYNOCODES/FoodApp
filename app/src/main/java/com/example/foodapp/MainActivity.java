@@ -1,7 +1,6 @@
 package com.example.foodapp;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 
 import android.graphics.PorterDuff;
 import android.os.Bundle;
@@ -12,8 +11,9 @@ import com.example.foodapp.Fragments.CartFragment;
 import com.example.foodapp.Fragments.HomeFragment;
 import com.example.foodapp.Fragments.MyOrdersFragment;
 import com.example.foodapp.Fragments.ProfilFragment;
+import com.example.foodapp.Interfaces.IconColorChangeListener;
 
-public class MainActivity extends AppCompatActivity implements IconColorChangeListener{
+public class MainActivity extends AppCompatActivity implements IconColorChangeListener {
     public ImageView Ic_Home,Ic_Profil,Ic_MyOrders,Ic_Cart;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,10 +24,20 @@ public class MainActivity extends AppCompatActivity implements IconColorChangeLi
     }
     @Override
     public void changeIconColors() {
-        // Change the icon colors here
-        Ic_Home.setColorFilter(ContextCompat.getColor(this, R.color.PrimaryColor));
-        Ic_Cart.setColorFilter(ContextCompat.getColor(this, R.color.Gray));
+        Ic_Home.setColorFilter(getColor(R.color.PrimaryColor), PorterDuff.Mode.SRC_IN);
+        Ic_Cart.setColorFilter(getColor(R.color.Gray), PorterDuff.Mode.SRC_IN);
+        Ic_MyOrders.setColorFilter(getColor(R.color.Gray),PorterDuff.Mode.SRC_IN);
+        Ic_Profil.setColorFilter(getColor(R.color.Gray), PorterDuff.Mode.SRC_IN);
     }
+
+    @Override
+    public void ChangeProfileIconColor() {
+        Ic_Home.setColorFilter(getColor(R.color.Gray), PorterDuff.Mode.SRC_IN);
+        Ic_Cart.setColorFilter(getColor(R.color.Gray), PorterDuff.Mode.SRC_IN);
+        Ic_MyOrders.setColorFilter(getColor(R.color.Gray),PorterDuff.Mode.SRC_IN);
+        Ic_Profil.setColorFilter(getColor(R.color.PrimaryColor), PorterDuff.Mode.SRC_IN);
+    }
+
     private void InisializationOfFealds(){
         Ic_Home = findViewById(R.id.HomeIcon);
         Ic_Profil = findViewById(R.id.ProfilIcon);

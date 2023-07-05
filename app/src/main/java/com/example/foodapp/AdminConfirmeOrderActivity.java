@@ -37,7 +37,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class AdminConfirmeOrderActivity extends AppCompatActivity {
-    private DatabaseReference RefOrder, RefOrderConfirmation, Refuser;
+    private DatabaseReference RefOrder, RefOrderConfirmation, Refuser, RefOrderConfirmationClient, RefUserOrder;
     private MyOrderAdapter myOrderAdapter;
     private RecyclerView CartRecyclerView;
     private TextView DeliveryCartPrice, TotleCartPrice, TotleItemsPrice, LocationOutPut, DeleveryNotesOutPut, ClientPhoneNumber, ClientFullName;
@@ -137,6 +137,12 @@ public class AdminConfirmeOrderActivity extends AppCompatActivity {
                 mydialog.setPositiveButton("Oui", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
+                        RefUserOrder = FirebaseDatabase.getInstance(getString(R.string.DBURL))
+                                .getReference()
+                                .child("Users")
+                                .child(order.getClientID())
+                                .child("Orders")
+                                .child(OrderID);
                         // deleting the product
                         if (RefOrder != null){
                             RefOrder.removeValue()
@@ -144,8 +150,18 @@ public class AdminConfirmeOrderActivity extends AppCompatActivity {
                                         @Override
                                         public void onComplete(@NonNull Task<Void> task) {
                                             if(task.isSuccessful()){
-                                                onBackPressed();
-                                                Toast.makeText(AdminConfirmeOrderActivity.this, "Order deleted", Toast.LENGTH_SHORT).show();
+                                                RefUserOrder.removeValue()
+                                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                            @Override
+                                                            public void onComplete(@NonNull Task<Void> task) {
+                                                                if(task.isSuccessful()){
+                                                                    onBackPressed();
+                                                                    Toast.makeText(AdminConfirmeOrderActivity.this, "Order deleted", Toast.LENGTH_SHORT).show();
+                                                                }else{
+                                                                    Toast.makeText(AdminConfirmeOrderActivity.this, task.getException().toString(), Toast.LENGTH_SHORT).show();
+                                                                }
+                                                            }
+                                                        });
                                             }else{
                                                 Toast.makeText(AdminConfirmeOrderActivity.this, task.getException().toString(), Toast.LENGTH_SHORT).show();
                                             }
@@ -178,7 +194,7 @@ public class AdminConfirmeOrderActivity extends AppCompatActivity {
                     if (order != null) {
                         TotleCartPrice.setText(String.valueOf(order.getPrice()));
                         for (int i = 0 ; i < order.getProducts().size() ; i++){
-                            totalItem[0] = totalItem[0] + Integer.parseInt(order.getProducts().get(i).getProduct().getPrice());
+                            totalItem[0] = totalItem[0] + Integer.parseInt(order.getProducts().get(i).getProduct().getPrice()) * Integer.parseInt(order.getProducts().get(i).getQuantity());
                         }
                         TotleItemsPrice.setText(String.valueOf(totalItem[0]));
                         DeliveryCartPrice.setText(String.valueOf(Integer.parseInt(order.getPrice()) - totalItem[0]));
@@ -241,14 +257,30 @@ public class AdminConfirmeOrderActivity extends AppCompatActivity {
                                         .child("Users")
                                         .child(Auth.getCurrentUser().getUid())
                                         .child("Orders");
+                                RefOrderConfirmationClient = FirebaseDatabase.getInstance(getString(R.string.DBURL))
+                                        .getReference()
+                                        .child("Users")
+                                        .child(order.getClientID())
+                                        .child("Orders");
                                 RefOrderConfirmation.child(order.getID()).setValue(order)
                                         .addOnCompleteListener(new OnCompleteListener<Void>() {
                                             @Override
                                             public void onComplete(@NonNull Task<Void> task) {
                                                 if (task.isSuccessful()){
-                                                    dialog.dismiss();
-                                                    onBackPressed();
-                                                    Toast.makeText(AdminConfirmeOrderActivity.this, "La commande a été confirmé avec succès", Toast.LENGTH_SHORT).show();
+                                                    RefOrderConfirmationClient.child(order.getID()).setValue(order)
+                                                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                @Override
+                                                                public void onComplete(@NonNull Task<Void> task) {
+                                                                    if (task.isSuccessful()){
+                                                                        dialog.dismiss();
+                                                                        onBackPressed();
+                                                                        Toast.makeText(AdminConfirmeOrderActivity.this, "La commande a été confirmé avec succès", Toast.LENGTH_SHORT).show();
+                                                                    }else {
+                                                                        dialog.dismiss();
+                                                                        Toast.makeText(AdminConfirmeOrderActivity.this, task.getException().toString(), Toast.LENGTH_SHORT).show();
+                                                                    }
+                                                                }
+                                                            });
                                                 }else {
                                                     dialog.dismiss();
                                                     Toast.makeText(AdminConfirmeOrderActivity.this, task.getException().toString(), Toast.LENGTH_SHORT).show();

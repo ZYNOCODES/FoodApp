@@ -36,10 +36,8 @@ public class AdminOrdersFragment extends Fragment {
     private TextView ConfirmedTextView, NewTextView;
     private RecyclerView MyAdminNewOrdersRecyclerView, MyAdminConfirmedOrdersRecyclerView;
     private AdminOrderAdapter adminOrderAdapter;
-    private OrderAdapter orderAdapter;
     private DatabaseReference RefOrder, RefOrderConfirmed;
     private FirebaseAuth Auth;
-    private ItemTouchHelper itemTouchHelper;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -55,23 +53,6 @@ public class AdminOrdersFragment extends Fragment {
         MyAdminNewOrdersRecyclerView.setLayoutManager(Newmanager);
         LinearLayoutManager Confirmedmanager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         MyAdminConfirmedOrdersRecyclerView.setLayoutManager(Confirmedmanager);
-
-        // Create an ItemTouchHelper instance
-        itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
-            @Override
-            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
-                return false;
-            }
-
-            @Override
-            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-                int position = viewHolder.getAdapterPosition();
-                orderAdapter.onItemSwiped(position);
-            }
-        });
-
-        // Attach the ItemTouchHelper to the RecyclerView
-        itemTouchHelper.attachToRecyclerView(MyAdminConfirmedOrdersRecyclerView);
 
         //fetch data
         fetchDataFromDB();
@@ -181,8 +162,24 @@ public class AdminOrdersFragment extends Fragment {
                         ConfirmedOrder.add(order);
                     }
                 }
-                orderAdapter = new OrderAdapter(getActivity(), ConfirmedOrder);
+                OrderAdapter orderAdapter = new OrderAdapter(getActivity(), ConfirmedOrder);
                 MyAdminConfirmedOrdersRecyclerView.setAdapter(orderAdapter);
+                // Create an ItemTouchHelper instance
+                ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
+                    @Override
+                    public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+                        return false;
+                    }
+
+                    @Override
+                    public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                        int position = viewHolder.getAdapterPosition();
+                        orderAdapter.onItemSwiped(position);
+                    }
+                });
+
+                // Attach the ItemTouchHelper to the RecyclerView
+                itemTouchHelper.attachToRecyclerView(MyAdminConfirmedOrdersRecyclerView);
             }
 
             @Override

@@ -5,9 +5,7 @@ import android.app.Dialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.PorterDuff;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -22,8 +20,6 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,23 +27,19 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.AbsListView;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.foodapp.Adapters.AnnonceAdapter;
 import com.example.foodapp.Adapters.CartAdapter;
-import com.example.foodapp.IconColorChangeListener;
-import com.example.foodapp.MainActivity;
+import com.example.foodapp.AdminConfirmeOrderActivity;
+import com.example.foodapp.Interfaces.IconColorChangeListener;
 import com.example.foodapp.Models.Cart;
 import com.example.foodapp.Models.Localisation;
 import com.example.foodapp.Models.Order;
-import com.example.foodapp.Models.Product;
 import com.example.foodapp.Models.User;
 import com.example.foodapp.R;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -73,7 +65,7 @@ public class CartFragment extends Fragment {
     private Animation vibrate;
     private MaterialCardView DeleveryNotes, PlaceMYOrderBTN;
     private CheckBox DeleveryCheckBox;
-    private DatabaseReference RefCart, RefOrder, Refuser;
+    private DatabaseReference RefCart, RefOrder, Refuser, RefOrderConfirmation;
     private FirebaseAuth Auth;
     private CartAdapter cartAdapter;
     private RecyclerView CartRecyclerView;
@@ -170,6 +162,11 @@ public class CartFragment extends Fragment {
                 .getReference()
                 .child("Users")
                 .child(Auth.getCurrentUser().getUid());
+        RefOrderConfirmation = FirebaseDatabase.getInstance(getString(R.string.DBURL))
+                .getReference()
+                .child("Users")
+                .child(Auth.getCurrentUser().getUid())
+                .child("Orders");
     }
     private void ButtonRedirection(){
         DeleveryCheckBox.setOnClickListener(new View.OnClickListener() {
@@ -219,7 +216,6 @@ public class CartFragment extends Fragment {
                         }else {
                             Toast.makeText(getActivity(), "Localisation est requis", Toast.LENGTH_SHORT).show();
                         }
-
                     }
                 }
             }
@@ -247,7 +243,7 @@ public class CartFragment extends Fragment {
                 for (DataSnapshot oneSnapshot : snapshot.getChildren()){
                     Cart product = oneSnapshot.getValue(Cart.class);
                     if (product != null) {
-                        totalItem[0] = totalItem[0] + Integer.parseInt(product.getProduct().getPrice());
+                        totalItem[0] = totalItem[0] + Integer.parseInt(product.getProduct().getPrice())*Integer.parseInt(product.getQuantity());
                     }
                     products.add(product);
                 }
@@ -290,17 +286,34 @@ public class CartFragment extends Fragment {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()){
-                            dialog.dismiss();
-                            //clear cart
-                            RefCart.removeValue()
+                            RefOrderConfirmation = FirebaseDatabase.getInstance(getString(R.string.DBURL))
+                                    .getReference()
+                                    .child("Users")
+                                    .child(Auth.getCurrentUser().getUid())
+                                    .child("Orders");
+                            RefOrderConfirmation.child(order.getID()).setValue(order)
                                     .addOnCompleteListener(new OnCompleteListener<Void>() {
                                         @Override
                                         public void onComplete(@NonNull Task<Void> task) {
-                                            if(task.isSuccessful()){
-                                                Toast.makeText(getActivity(), "La commande a été ajoutée", Toast.LENGTH_SHORT).show();
+                                            if (task.isSuccessful()){
+                                                dialog.dismiss();
+                                                //clear cart
+                                                RefCart.removeValue()
+                                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                            @Override
+                                                            public void onComplete(@NonNull Task<Void> task) {
+                                                                if(task.isSuccessful()){
+                                                                    Toast.makeText(getActivity(), "La commande a été ajoutée", Toast.LENGTH_SHORT).show();
+                                                                }
+                                                            }
+                                                        });
+                                            }else {
+                                                dialog.dismiss();
+                                                Toast.makeText(getActivity(), task.getException().toString(), Toast.LENGTH_SHORT).show();
                                             }
                                         }
                                     });
+
                         }else {
                             dialog.dismiss();
                             Toast.makeText(getActivity(), task.getException().toString(), Toast.LENGTH_SHORT).show();
