@@ -60,7 +60,6 @@ public class DisplayOrderActivity extends AppCompatActivity {
         //fetch data
         fetchDataFromDB();
 
-
     }
     private void InisializationOfFealds(){
         CartRecyclerView = findViewById(R.id.CartRecyclerView);
