@@ -7,14 +7,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,19 +16,31 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+
+import com.canhub.cropper.CropImage;
+import com.canhub.cropper.CropImageView;
 import com.example.foodapp.Models.Product;
 import com.example.foodapp.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.card.MaterialCardView;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.yalantis.ucrop.UCrop;
 
+
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
@@ -53,6 +57,9 @@ public class AdminAddNewProductFragment extends Fragment {
     private StorageReference ProductImgref;
     private DatabaseReference RefProduct;
     private Dialog dialog;
+    private final int CODE_IMG_GALLERY = 1;
+    private final String SAMPLE_CROPPED_IMG_NAME = "SimpleCropImg";
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -60,12 +67,18 @@ public class AdminAddNewProductFragment extends Fragment {
 
         //init
         InisializationOfFealds();
-        openGalleryResult();
         dialog = new Dialog(getActivity());
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.dialog_wait1);
         dialog.setCanceledOnTouchOutside(false);
-
+        //crop IMG
+        AddIMGInPut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivityForResult(new Intent().setAction(Intent.ACTION_GET_CONTENT)
+                        .setType("image/*"),CODE_IMG_GALLERY);
+            }
+        });
         //add new product
         AddNewProductBTN.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -113,6 +126,28 @@ public class AdminAddNewProductFragment extends Fragment {
 
         return view;
     }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == CODE_IMG_GALLERY && resultCode == Activity.RESULT_OK) {
+            if (data != null) {
+                Uri imageUri = data.getData();
+                if (imageUri != null) {
+                    startCrop(imageUri);
+                }
+            }
+        }else if (requestCode == UCrop.REQUEST_CROP && resultCode == Activity.RESULT_OK){
+            if (data != null) {
+                image_file = UCrop.getOutput(data);
+                if (image_file != null){
+                    AddIMGInPut.setImageURI(image_file);
+                }
+            }
+
+        }
+    }
+
     private void InisializationOfFealds(){
         AddIMGInPut = view.findViewById(R.id.AddIMGInPut);
         NameInPut = view.findViewById(R.id.NameInPut);
@@ -127,90 +162,31 @@ public class AdminAddNewProductFragment extends Fragment {
         ProductImgref = FirebaseStorage.getInstance().getReference()
                 .child("ProductImages");
     }
-    private void openGalleryResult(){
-        ActivityResultLauncher<Intent> openGalleryResult = registerForActivityResult(
-                new ActivityResultContracts.StartActivityForResult(),
-                new ActivityResultCallback<ActivityResult>() {
-                    @Override
-                    public void onActivityResult(ActivityResult result) {
-                        if (result.getResultCode() == Activity.RESULT_OK){
-                            Intent data = result.getData();
-                            image_file = data.getData();
-                            float desiredWidthDp = 150; // Desired width in dp
-                            float desiredHeightDp = 100; // Desired height in dp
+    private void startCrop(@NonNull Uri uri){
+        String destinationFileName = ".jpeg";
+        Uri destinationUri = Uri.fromFile(new File(requireActivity().getCacheDir(), destinationFileName));
 
-                            // Convert dp to pixels based on the device's screen density
-                            float density = getResources().getDisplayMetrics().density;
-                            int desiredWidthPx = (int) (desiredWidthDp * density);
-                            int desiredHeightPx = (int) (desiredHeightDp * density);
-
-                            // Resize or downscale the image before setting it to the ImageView
-                            Bitmap resizedBitmap = resizeImage(image_file, desiredWidthPx, desiredHeightPx);
-
-                            if (resizedBitmap != null) {
-                                // Set the resized bitmap to the ImageView
-                                AddIMGInPut.setImageBitmap(resizedBitmap);
-                            } else {
-                                // Handle the case where resizing failed
-                                Toast.makeText(getActivity(),"Le redimensionnement a échoué.", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    }
-                });
-
-        AddIMGInPut.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openGalleryResult.launch(OpenGalery());
-            }
-        });
+        UCrop uCrop = UCrop.of(uri, destinationUri);
+        uCrop.withAspectRatio(1, 1);
+        uCrop.withMaxResultSize(500, 500);
+        uCrop.withOptions(getCropOptions());
+        uCrop.start(requireContext(), AdminAddNewProductFragment.this);
     }
-    private Bitmap resizeImage(Uri imageUri, int desiredWidth, int desiredHeight) {
-        try {
-            InputStream inputStream = requireContext().getContentResolver().openInputStream(imageUri);
-            BitmapFactory.Options options = new BitmapFactory.Options();
-            options.inJustDecodeBounds = true;
-            BitmapFactory.decodeStream(inputStream, null, options);
+    private UCrop.Options getCropOptions(){
+        UCrop.Options options = new UCrop.Options();
+        //Quality
+        options.setCompressionQuality(70);
+        //format
+        options.setCompressionFormat(Bitmap.CompressFormat.PNG);
+        options.setCompressionFormat(Bitmap.CompressFormat.JPEG);
+        //UI
+        options.setHideBottomControls(false);
+        options.setFreeStyleCropEnabled(false);
+        //colors
+        options.setStatusBarColor(getResources().getColor(R.color.PrimaryColor));
+        options.setToolbarColor(getResources().getColor(R.color.SecondColor));
 
-            // Calculate an appropriate inSampleSize value
-            options.inSampleSize = calculateInSampleSize(options, desiredWidth, desiredHeight);
-
-            inputStream.close();
-            inputStream = requireContext().getContentResolver().openInputStream(imageUri);
-
-            // Decode the bitmap with the calculated inSampleSize
-            options.inJustDecodeBounds = false;
-            Bitmap resizedBitmap = BitmapFactory.decodeStream(inputStream, null, options);
-
-            inputStream.close();
-
-            return resizedBitmap;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-    private int calculateInSampleSize(BitmapFactory.Options options, int desiredWidth, int desiredHeight) {
-        final int width = options.outWidth;
-        final int height = options.outHeight;
-        int inSampleSize = 1;
-
-        if (height > desiredHeight || width > desiredWidth) {
-            final int halfHeight = height / 2;
-            final int halfWidth = width / 2;
-
-            while ((halfHeight / inSampleSize) >= desiredHeight && (halfWidth / inSampleSize) >= desiredWidth) {
-                inSampleSize *= 2;
-            }
-        }
-
-        return inSampleSize;
-    }
-    private Intent OpenGalery(){
-        Intent i = new Intent();
-        i.setAction(Intent.ACTION_GET_CONTENT);
-        i.setType("image/*");
-        return i;
+        return options;
     }
     private boolean isNotEmpty(){
         if (NameInPut.getText().toString().isEmpty()){

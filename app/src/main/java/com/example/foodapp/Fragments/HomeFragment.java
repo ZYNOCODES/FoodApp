@@ -280,7 +280,7 @@ public class HomeFragment extends Fragment {
                                 BurgerBTN.setCardBackgroundColor(whiteColor);
                                 BurgerTitle.setTextColor(primaryTextColor);
 
-                                postType1Adapter = new PostType1Adapter(getActivity(),products);
+                                postType1Adapter = new PostType1Adapter(getActivity(),DrinksProducts);
                                 ProductRecyclerView.setAdapter(postType1Adapter);
                             }
                         });

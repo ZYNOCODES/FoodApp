@@ -1,5 +1,6 @@
 package com.example.foodapp.Fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -11,13 +12,16 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.foodapp.Adapters.MyOrderAdapter;
 import com.example.foodapp.Adapters.OrderAdapter;
+import com.example.foodapp.AuthentificationActivity;
 import com.example.foodapp.DisplayOrderActivity;
 import com.example.foodapp.Models.Order;
 import com.example.foodapp.R;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -32,6 +36,8 @@ public class AdminAllOrdersFragment extends Fragment {
     private OrderAdapter orderAdapter;
     private RecyclerView MyOrdersRecyclerView;
     private DatabaseReference RefOrder;
+    private FirebaseAuth Auth;
+    private ImageView LogOutBTN;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -47,10 +53,22 @@ public class AdminAllOrdersFragment extends Fragment {
         //fetch data
         fetchDataFromDB();
 
+        //Logout
+        LogOutBTN.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Auth.signOut();
+                Intent i = new Intent(getActivity(), AuthentificationActivity.class);
+                startActivity(i);
+                getActivity().finish();
+            }
+        });
         return view;
     }
     private void InisializationOfFealds(){
         MyOrdersRecyclerView = view.findViewById(R.id.MyOrdersRecyclerView);
+        LogOutBTN = view.findViewById(R.id.LogOutBTN);
+        Auth = FirebaseAuth.getInstance();
         RefOrder = FirebaseDatabase.getInstance(getString(R.string.DBURL))
                 .getReference()
                 .child("Orders");

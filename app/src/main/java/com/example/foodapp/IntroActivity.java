@@ -24,9 +24,15 @@ public class IntroActivity extends AppCompatActivity {
 
                 }finally {
                     if (Auth.getCurrentUser() != null){
-                        Intent i = new Intent(IntroActivity.this,AuthentificationActivity.class);
-                        startActivity(i);
-                        finish();
+                        if (Auth.getCurrentUser().getEmail().equals("FratelloFood@admin.com") || Auth.getCurrentUser().getEmail().equals("fratellofood@admin.com")){
+                            Intent i = new Intent(IntroActivity.this,AdminMainActivity.class);
+                            startActivity(i);
+                            finish();
+                        }else {
+                            Intent i = new Intent(IntroActivity.this,MainActivity.class);
+                            startActivity(i);
+                            finish();
+                        }
                     }else {
                         Intent i = new Intent(IntroActivity.this,AuthentificationActivity.class);
                         startActivity(i);
@@ -38,4 +44,5 @@ public class IntroActivity extends AppCompatActivity {
         };
         thread.start();
     }
+
 }

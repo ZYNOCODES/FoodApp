@@ -23,6 +23,10 @@ import com.example.foodapp.DisplayOrderActivity;
 import com.example.foodapp.Models.Order;
 import com.example.foodapp.Models.User;
 import com.example.foodapp.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.card.MaterialCardView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -68,6 +72,28 @@ public class ProfilFragment extends Fragment {
                 .child(Auth.getCurrentUser().getUid());
     }
     private void ButtonRedirection() {
+        ResetPasswordBTN.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (Auth.getCurrentUser().getEmail() != null){
+                    Auth.sendPasswordResetEmail(Auth.getCurrentUser().getEmail()).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void unused) {
+                            Toast.makeText(getActivity(),"le lien de réinitialisation du mot de passe a été envoyé à votre adresse e-mail enregistrée" +
+                                    "\'"+Auth.getCurrentUser().getEmail()+"\'",Toast.LENGTH_SHORT).show();
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(getActivity(),"Erreur " + e.getMessage(),Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }else {
+                    Toast.makeText(getActivity(),"L'e-mail avec lequel vous vous êtes connecté n'est pas correct, " +
+                            "je vous suggère de vous inscrire à un nouveau compte avec un e-mail valide (utilisez populaire comme gmail ou yahoo ...)",Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
         UpdateProfilBTN.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

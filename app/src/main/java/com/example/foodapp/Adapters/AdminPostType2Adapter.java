@@ -1,5 +1,6 @@
 package com.example.foodapp.Adapters;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -65,12 +66,13 @@ public class AdminPostType2Adapter extends RecyclerView.Adapter<AdminPostType2Vi
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         // deleting the product
+                        String IMGREF = Posts.get(position).getImgRef()+".jpeg";
                         RefProduct.child(Posts.get(position).getID()).removeValue()
                                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
                                         if(task.isSuccessful()){
-                                            ProductsImgref.child(Posts.get(position).getImgRef()+".jpeg").delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            ProductsImgref.child(IMGREF).delete().addOnCompleteListener(new OnCompleteListener<Void>() {
                                                 @Override
                                                 public void onComplete(@NonNull Task<Void> task) {
                                                     if (task.isSuccessful()){

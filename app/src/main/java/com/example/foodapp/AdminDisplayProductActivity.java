@@ -79,10 +79,13 @@ public class AdminDisplayProductActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 product = snapshot.getValue(Product.class);
-                AboutOutPut.setText(product.getDescription());
-                TitleOutPut.setText(product.getName());
-                PriceOutPut.setText(product.getPrice());
-                Picasso.get().load(product.getIMG()).into(IMGOutPut);
+                if (product != null){
+                    AboutOutPut.setText(product.getDescription());
+                    TitleOutPut.setText(product.getName());
+                    PriceOutPut.setText(product.getPrice());
+                    Picasso.get().load(product.getIMG()).into(IMGOutPut);
+                }
+
             }
 
             @Override
